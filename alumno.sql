@@ -56,6 +56,8 @@ INSERT into duños Values ('111AAA', '1', '01/01/2023', '15/05/2023')
     ('4444DDD', 5, '20/01/2023', '08/11/2023')
     ('5555EEE', 1, '15/04/2023', NULL)
 
+--Tabla de una sola tabla--
+
 --SELECT lo que buscas, FROM donde estas, WHERE lo que tiene que hacer para que salgas la opcion por ejemplo solo sale el telefono del nombre Juan Perez, Distinct distinto, cuando hay NULL delante tiene que ir IS, order by ordenarlo por ..... ASC de A,Z y DESC de Z,A ,
 
 SELECT nombre FROM persona;
@@ -63,3 +65,9 @@ SELECT telefono FROM persona WHERE nombre='Juan Perez';
 SELECT persona FROM dueños WHERE matricula='1111AAA' AND f_fin IS NULL;
 SELECT  Distinct color FROM coche WHERE marca='Honda'
 Select marca, modelo From coche ORDER BY marca; 
+
+--Consultas con varias tablas--
+
+SELECT nombre, matricula FROM dueños, persona
+WHERE dueños.persona= ID_persona AND f_fin IS NULL;
+
