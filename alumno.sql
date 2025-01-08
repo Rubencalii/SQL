@@ -1,5 +1,5 @@
 //Repaso y Segundo 2 trimestre
-
+/*
 CREATE TABLE coche(
     matricula varchar2(10) PRIMARY KEY,
     modelo varchar2(15),
@@ -71,3 +71,25 @@ Select marca, modelo From coche ORDER BY marca;
 SELECT nombre, matricula FROM dueños, persona
 WHERE dueños.persona= ID_persona AND f_fin IS NULL;
 
+SELECT matricula, f_ini FROM dueños, persona
+WHERE persona=ID AND nombre='Carlos Lopez';
+
+SELECT f_ini FROM dueños, coche
+WHERE dueños.matricula=coche.matricula AND color='Rojo';
+
+SELECT color FROM persona, dueños, coches
+WHERE persona.id=persona AND dueños.matricula=coche.matricula AND nombre='Ana Martinez' AND f_fin IS NULL;
+
+SELECT nombre FROM coche, dueños, personaWHERE persona.id=persona AND dueños.matricula=coche.matricula
+AND color='Negro' AND modelo='Mustang' AND marca='Ford' ORDER BY f_ini;
+
+--Modificaciones de datos--
+
+UPDATE persona SET nombre='Ana M. Martinez' WHERE nombre='Ana Martinez';
+UPDATE coche SET color='Oscuro' WHERE color='Negro';
+UPDATE dueños SET f_fin='25-03-2023' WHERE f_fin IS NULL;
+DELETE FROM dueño WHERE matricula='1111AAA';
+DELETE FROM dueños WHERE f_ini='15/04/2023';
+DELETE FROM dueños;
+
+*/
