@@ -93,3 +93,30 @@ DELETE FROM dueños WHERE f_ini='15/04/2023';
 DELETE FROM dueños;
 
 */
+
+CREATE TABLE pokemon (
+    ID  numeric(3)CHECK(ID >= 0) PRIMARY KEY,
+    Nombre Varchar2(30),
+    Altura numeric(5,1),
+    Peso numeric(4,1),
+    Categoria VARCHAR2(25),
+    Habilidad VARCHAR2(25),
+);
+
+CREATE TABLE tipo (
+    ID_tipo numeric(3)CHECK(ID_tipo >= 0) PRIMARY KEY,
+    nombre VARCHAR(20)
+),
+
+CREATE TABLE pokedex (
+    ID  numeric(3)CHECK(ID >= 0) PRIMARY KEY,
+    ID_tipo numeric(3)CHECK(ID_tipo >= 0) PRIMARY KEY,
+),
+
+SELECT Nombre, Habilidad WHERE Peso >= '100';
+SELECT pokemon WHERE Habilidad='Levitacion';
+SELECT Nombre, Categoria Where Categoria='Raton';
+SELECT Nombre WHERE Peso =<'1.5';
+SELECT Nombre WHERE ID_tipo='3';
+SELECT tipo WHERE Peso>50 AND Peso<100
+SELECT Nombre WHERE Categoria='Semilla' AND Categoria='Lagarto'
