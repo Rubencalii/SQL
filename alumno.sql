@@ -112,11 +112,51 @@ CREATE TABLE pokedex (
     ID  numeric(3)CHECK(ID >= 0) PRIMARY KEY,
     ID_tipo numeric(3)CHECK(ID_tipo >= 0) PRIMARY KEY,
 ),
+INSERT into pokemon Values ('1','Bulbasaur','0,7','6,9','Semilla','Espesura');
+    ('2','Charmander','0,6','8,5','Lagarto','Mar Llamas');
+    ('3','Squirtle','0,5','9','Tortuguita','Torrente');
+    ('4','Pikachu','0,4','6','Raton','Electricidad estatica');
+    ('5','Jigglypuff','0,5','5,5','Globo','Cura');
+    ('6','Gengar','1,5','40,5','Sombra','Levitacion');
+    ('7','Onix','8,8','210','Serpiente de roca','Cabeza de roca');
+    ('8','Machamp','1,6','130','Super poder','Guts');
+    ('9','Lapras','2,5','220','Transporte','Absorbe Agua');
+    ('10','Snorlax','2,1','460','Formilon','Impasible');
+
+INSERT into tipo VALUES ('1','Planta');
+    ('2','Fuego');
+    ('3','Agua');
+    ('4','Electrico');
+    ('5','Normal');
+    ('6','Fantasma');
+    ('7','Roca');
+    ('8','Lucha');
+    ('9','Hielo');
+    ('10','Veneno');
+INSERT into pokedex VALUES ('1','1');
+    ('2','2');
+    ('3','3');
+    ('4','4');
+    ('5','5');
+    ('6','6');
+    ('7','7');
+    ('8','8');
+    ('9','3');
+    ('9','9');
+    ('10','5');
+    ('6','10');
 
 SELECT Nombre, Habilidad WHERE Peso >= '100';
 SELECT pokemon WHERE Habilidad='Levitacion';
 SELECT Nombre, Categoria Where Categoria='Raton';
 SELECT Nombre WHERE Peso =<'1.5';
 SELECT Nombre WHERE ID_tipo='3';
-SELECT tipo WHERE Peso>50 AND Peso<100
-SELECT Nombre WHERE Categoria='Semilla' AND Categoria='Lagarto'
+SELECT tipo WHERE Peso>50 AND Peso<100;
+SELECT Nombre WHERE Categoria='Semilla' AND Categoria='Lagarto';
+SELECT Peso ORDER BY ASC;
+SELECT Peso ORDER BY DESC;
+SELECT Tipos WHERE Nombre ='Lapras';
+SELECT pokemon ORDER BY ASC;
+SELECT pokemon WHERE tipo='Electrico','Normal','Fantasma','Roca','Lucha','Hielo','Veneno';
+UPDATE tipo SET='1','Planta','Veneno'
+
