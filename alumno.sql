@@ -160,3 +160,18 @@ SELECT pokemon ORDER BY ASC;
 SELECT pokemon WHERE tipo='Electrico','Normal','Fantasma','Roca','Lucha','Hielo','Veneno';
 UPDATE tipo SET='1','Planta','Veneno'
 
+CREATE TABLE Ataques(
+    ID_ataque numeric(3)CHECK(ID >= 0) PRIMARY KEY,
+    Nombre VARCHAR2(25),
+    Tipo_ID numeric(3),
+    Potencia numeric(3),
+    Presicion numeric(3),
+    PP numeric(3),
+    Categoria VARCHAR2(20),
+);
+CREATE TABLE pokemon_ataques (
+    ID_pokemon numeric(3)CHECK(ID >= 0) PRIMARY KEY,
+    ataque_ID numeric(3),
+    nivel numeric(3),
+    metodo VARCHAR(15),
+), 
