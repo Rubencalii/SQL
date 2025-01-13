@@ -103,15 +103,15 @@ INSERT INTO cliente VALUES ('22222222F', 'PEPE', '01/01/00', 'GRANADA', 'H', 611
 INSERT INTO cliente(dni, fecha_nac, sexo, nombre) VALUES ('33333333H', '15/02/03', 'H', 'Manolo');
 
 INSERT INTO cliente (dni, nombre, fecha_nac, direccion, sexo) VALUES 
-('11111111Z', 'Lucía', '12/05/2002', 'Granada', 'M');
+('11111111Z', 'Lucï¿½a', '12/05/2002', 'Granada', 'M');
 INSERT INTO cliente (dni, nombre, fecha_nac, direccion, sexo) VALUES 
-('22222222B', 'Mónica', '18/12/2008', 'Jaén', 'M');
+('22222222B', 'Mï¿½nica', '18/12/2008', 'Jaï¿½n', 'M');
 INSERT INTO cliente (dni, nombre, fecha_nac, direccion, sexo) VALUES 
 ('12345678C', 'Luis', '18/02/2008', 'Granada', 'H');
 INSERT INTO cliente (dni, nombre, fecha_nac, direccion, sexo) VALUES 
-('33333333R', 'César', '08/09/2003', 'Granada', 'H');
+('33333333R', 'Cï¿½sar', '08/09/2003', 'Granada', 'H');
 INSERT INTO cliente (dni, nombre, fecha_nac, direccion, sexo) VALUES 
-('55555555T', 'Roberto', '24/11/2008', 'Málaga', 'H');
+('55555555T', 'Roberto', '24/11/2008', 'Mï¿½laga', 'H');
 
 
 ALTER TABLE producto
@@ -121,9 +121,9 @@ ALTER TABLE producto
 MODIFY precio NULL;
 
 INSERT INTO producto (cod, nombre, stock, precio, tipo) VALUES
-(1, 'Lápiz negro', 100, 0.75, 1);
+(1, 'Lï¿½piz negro', 100, 0.75, 1);
 INSERT INTO producto (cod, nombre, stock, precio, tipo) VALUES
-(2, 'Bolígrafo azul', 85, 1.25, 1);
+(2, 'Bolï¿½grafo azul', 85, 1.25, 1);
 INSERT INTO producto (cod, nombre, stock, precio, tipo) VALUES
 (3, 'Libreta A4', 60, 1.75, 2);
 INSERT INTO producto (cod, nombre, stock, precio, tipo) VALUES
@@ -166,7 +166,7 @@ INSERT INTO compra (cliente, producto, fecha, cantidad) VALUES
 
 
 DELETE FROM compra;
-DELETE FROM cliente WHERE direccion='Málaga';
+DELETE FROM cliente WHERE direccion='Mï¿½laga';
 DELETE FROM producto WHERE precio<1;
 DELETE FROM cliente WHERE sexo='H';
 DELETE FROM cliente;
@@ -181,11 +181,11 @@ WHERE dni='11111111Z';
 UPDATE producto
 SET precio=1.25,
 stock = 150
-WHERE nombre='Bolígrafo azul';
+WHERE nombre='Bolï¿½grafo azul';
 
 UPDATE cliente
-SET direccion='Málaga'
-WHERE nombre='Mónica';
+SET direccion='Mï¿½laga'
+WHERE nombre='Mï¿½nica';
 
 UPDATE producto
 SET precio = precio + 0.25;
@@ -198,7 +198,7 @@ UPDATE producto
 SET precio = 1.25
 WHERE tipo=1 OR tipo=2;
 
-UPDATE cliente SET nombre='césar' WHERE nombre='César';
+UPDATE cliente SET nombre='cï¿½sar' WHERE nombre='Cï¿½sar';
 
 SELECT dni, nombre FROM cliente;
 
@@ -214,7 +214,7 @@ SELECT nombre FROM cliente WHERE sexo='M';
 
 SELECT dni, nombre FROM cliente WHERE NOT direccion='Granada';
 
-SELECT * FROM cliente WHERE nombre='Lucía';
+SELECT * FROM cliente WHERE nombre='Lucï¿½a';
 
 SELECT precio FROM producto WHERE tipo=2;
 
@@ -274,15 +274,15 @@ SELECT cliente.nombre FROM cliente, compra WHERE cantidad>4 AND producto=2 AND d
 SELECT DISTINCT producto.nombre FROM compra, producto WHERE cantidad<3 AND cod=producto;
 
 SELECT DISTINCT producto.* FROM compra, producto, cliente 
-WHERE compra.cliente=cliente.dni AND compra.producto=producto.cod AND cliente.nombre='Lucía';
+WHERE compra.cliente=cliente.dni AND compra.producto=producto.cod AND cliente.nombre='Lucï¿½a';
 
 DROP TABLE trabajador CASCADE CONSTRAINTS;
 DROP TABLE tienda CASCADE CONSTRAINTS;
 DROP TABLE oferta CASCADE CONSTRAINTS;
 
 INSERT INTO trabajador VALUES(18, 'Pedro', 'Encargado', 'Cajas', 1);
-INSERT INTO trabajador VALUES(21, 'Elena', 'Encargado', 'Reposición', 1);
-INSERT INTO trabajador VALUES(35, 'Manuel', 'Suplente', 'Reposición', 1);
+INSERT INTO trabajador VALUES(21, 'Elena', 'Encargado', 'Reposiciï¿½n', 1);
+INSERT INTO trabajador VALUES(35, 'Manuel', 'Suplente', 'Reposiciï¿½n', 1);
 
 INSERT INTO tienda VALUES(1, 500);
 INSERT INTO tienda VALUES(2, 800);
@@ -345,7 +345,7 @@ WHERE producto.cod=oferta.producto AND oferta.tipo=2;
 
 SELECT DISTINCT cliente.*
 FROM cliente, producto, compra
-WHERE dni=compra.cliente AND producto.cod=compra.producto AND producto.nombre='Bolígrafo azul'
+WHERE dni=compra.cliente AND producto.cod=compra.producto AND producto.nombre='Bolï¿½grafo azul'
 ORDER BY fecha_nac ASC;
 
 SELECT DISTINCT cliente.nombre
@@ -354,7 +354,7 @@ WHERE dni=compra.cliente AND producto.cod=compra.producto AND precio IS NOT NULL
 
 SELECT cliente.nombre, ROUND(precio*cantidad*1.21, 2)
 FROM cliente, producto, compra
-WHERE compra.cliente=dni AND producto.cod=compra.producto AND direccion='Málaga';
+WHERE compra.cliente=dni AND producto.cod=compra.producto AND direccion='Mï¿½laga';
 
 SELECT oferta.cod, oferta.tienda, producto.nombre, trabajador.nombre, oferta.tipo, inicio, fin
 FROM oferta, trabajador, tienda, producto 
