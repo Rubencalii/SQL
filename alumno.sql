@@ -99,7 +99,7 @@ CREATE TABLE pokemon (
     Nombre Varchar2(30),
     Altura numeric(5,1),
     Peso numeric(4,1),
-    Categoria VARCHAR2(25),
+    Categoria VARCHAR2(25), 
     Habilidad VARCHAR2(25),
 );
 
@@ -175,3 +175,22 @@ CREATE TABLE pokemon_ataques (
     nivel numeric(3),
     metodo VARCHAR(15),
 ), 
+
+INSERT into Ataques VALUES ('1','Lanzallamas','2','90','100','15','Especial');
+    ('2','Rayo','3','90','100','15','Especial');
+    ('3','Terremoto','4','100','100','10','Fisico',);
+    ('4','Danza espada','1','NULL','100','20','Estado',);
+    ('5','Surf','3','90','100','15','Especial',);
+    ('6','Placaje','1','40','100','35','Fisico',);
+    ('7','Rugido','1','NULL','100','20','Estado',);
+    ('8','Puño Hielo','5','75','100','15','Fisico',);
+
+INSERT into pokemon_ataques ('2','1','24','Nivel');
+    ('2','4','NULL','MT/MO');
+    ('3','6','1','Nivel');
+    ('3','8','NULL','MT/MO');
+    ('3','5','NULL','MT/MO');
+    ('4','2','36','Nivel');
+    ('4','5','NULL','MT/MO');
+    ('4','6','10','Nivel');
+    ('4','1','50','Nivel');
