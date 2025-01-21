@@ -377,6 +377,8 @@ SELECT * FROM cliente WHERE direccion =(SELECT direccion FROM cliente WHERE nomb
 
 SELECT * FROM cliente WHERE fecha_nac =(SELECT fecha_nac FROM cliente WHERE nombre='Lucia');
 
+
+/*Operadores*/
 SELECT * FROM compra c, producto p WHERE c.producto=p.cod
 AND p.nombre='Boligrafo azul' AND c.cantidad > (
     SELECT cantidad FROM compra c1, producto p1, cliente c11    
