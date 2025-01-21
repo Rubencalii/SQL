@@ -361,3 +361,20 @@ FROM oferta, trabajador, tienda, producto
 WHERE producto.cod=oferta.producto AND trabajador.cod=oferta.trabajador 
 AND tienda.cod=oferta.tienda AND metros>=500;
 
+/*1*/
+
+SELECT * FROM cliente WHERE direccion =(SELECT direccion FROM cliente WHERE nombre='Cesar');
+
+/*2*/
+
+SELECT * FROM cliente WHERE fecha_nac =(SELECT fecha_nac FROM cliente WHERE nombre='Luis');
+
+/*3*/
+
+SELECT * FROM cliente WHERE direccion =(SELECT direccion FROM cliente WHERE nombre='Lucia');
+
+/*4*/
+
+SELECT * FROM cliente WHERE fecha_nac =(SELECT fecha_nac FROM cliente WHERE nombre='Lucia');
+
+/*5*/

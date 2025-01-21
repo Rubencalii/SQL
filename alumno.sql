@@ -159,7 +159,7 @@ SELECT Tipos WHERE Nombre ='Lapras';
 SELECT pokemon ORDER BY ASC;
 SELECT pokemon WHERE tipo='Electrico','Normal','Fantasma','Roca','Lucha','Hielo','Veneno';
 UPDATE tipo SET='1','Planta','Veneno'
-*/
+
 CREATE TABLE Ataques(
     ID_ataque numeric(3)CHECK(ID >= 0) PRIMARY KEY,
     Nombre VARCHAR2(25),
@@ -194,3 +194,5 @@ INSERT into pokemon_ataques ('2','1','24','Nivel')
     ('4','5','NULL','MT/MO')
     ('4','6','10','Nivel')
     ('4','1','50','Nivel')
+*/
+
