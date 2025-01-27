@@ -385,3 +385,24 @@ AND p.nombre='Boligrafo azul' AND c.cantidad > (
         WHERE c1.cliente=c11.dni AND c1.producto=p1.cod AND c11.nombre='Lucia'
             AND p1.nombre='Boligrafo azul'
 )
+/*Operador*/
+//1
+
+SELECT nombre FROM trabajador 
+    WHERE tienda = ANY(
+            SELECT tienda FROM trabajador
+                    WHERE nombre IN ('Pedro','Manuel')
+    );
+
+//2
+
+SELECT * FROM cliente WHERE fecha_nac <= ALL (
+        SELECT fecha_nac FROM cliente
+);
+
+//3
+
+SELECT nombre FROM cliente where dni = ANY (
+        SELECT cliente, producto FROM compra
+         GROUP BY cliente, producto HAVING sum(cantidad)<2
+        );
