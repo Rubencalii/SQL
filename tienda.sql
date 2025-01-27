@@ -385,7 +385,7 @@ AND p.nombre='Boligrafo azul' AND c.cantidad > (
         WHERE c1.cliente=c11.dni AND c1.producto=p1.cod AND c11.nombre='Lucia'
             AND p1.nombre='Boligrafo azul'
 )
-/*Operador*/
+/*Subconsulta*/
 //1
 
 SELECT nombre FROM trabajador 
@@ -407,3 +407,24 @@ SELECT nombre FROM cliente where dni = ANY (
          GROUP BY cliente, producto HAVING sum(cantidad)<2
        
         );
+
+//Ejercicios
+
+//1
+
+SELECT nombre FROM cliente WHERE nombre != ALL SELECT nombre FROM cliente where dni = ANY (
+        SELECT cliente, producto FROM compra
+         GROUP BY cliente, producto HAVING sum(cantidad)<2
+       
+        );
+
+//2
+
+SELECT nombre FROM cliente WHERE dni = 
+       ANY (SELECT cliente FROM compra              
+            WHERE producto = ANY (SELECT cod FROM producto 
+                    WHERE NOMBRE !='Boligrafo azul'));
+
+//3
+
+SELECT * FROM tienda where metros>= ALL(SELECT metros FROM tienda);
