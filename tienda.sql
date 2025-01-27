@@ -405,4 +405,5 @@ SELECT * FROM cliente WHERE fecha_nac <= ALL (
 SELECT nombre FROM cliente where dni = ANY (
         SELECT cliente, producto FROM compra
          GROUP BY cliente, producto HAVING sum(cantidad)<2
+       
         );
