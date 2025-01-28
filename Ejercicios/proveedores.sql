@@ -203,18 +203,25 @@ SELECT p.nombre FROM proveedores p WHERE p.codigo_proveedor NOT IN (
 );
 //26
 ALTER TABLE proveedores ADD COLUMN edad INT;
+
 //27
 ALTER TABLE suministro ADD COLUMN fecha_envio DATE, ADD COLUMN precio DECIMAL(10, 2);
+
 //28
 ALTER TABLE componentes RENAME COLUMN CNOMBRE TO nombre_componentes;
+
 //29
 ALTER TABLE articulos MODIFY COLUMN TNOMBRE VARCHAR(100);
+
 //30
 UPDATE proveedores SET ciudad = 'CACERES'WHERE nombre = 'JUAN';
+
 //31
 UPDATE proveedores SET categoria = categoria + 10 WHERE nombre = 'EVA';
+
 //32
 DELETE FROM suministro WHERE codigo_proveedor = 
     (SELECT codigo_proveedor FROM proveedores WHERE nombre = 'INMA');
+    
 //33
 DELETE FROM proveedores WHERE ciudad = 'SEVILLA';
