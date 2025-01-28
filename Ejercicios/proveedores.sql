@@ -164,3 +164,26 @@ SELECT s.* FROM suministro s JOIN articulos a
 SELECT DISTINCT a.codigo_articulo FROM articulos a JOIN suministro s 
     ON a.codigo_articulo = s.codigo_articulo JOIN proveedores p 
         ON s.codigo_proveedor = p.codigo_proveedor WHERE p.ciudad != 'MADRID' AND p.ciudad != a.ciudad;
+//16
+SELECT s.codigo_componente FROM suministro s WHERE s.codigo_articulo = 'T2'
+    AND s.codigo_proveedor = 'P2';
+//17
+SELECT s.* FROM suministro s JOIN componentes c 
+    ON s.codigo_componente = c.codigo_componente WHERE c.color != 'ROJO';
+//18
+SELECT DISTINCT s.codigo_proveedor FROM suministro s 
+    WHERE s.codigo_articulo = 'T3' AND s.cantidad > 250;
+//19
+SELECT p.codigo_proveedor FROM proveedores p WHERE p.categoria > 20
+  AND p.ciudad = 'SEVILLA';
+//20
+SELECT s.* FROM suministro s JOIN componentes c 
+    ON s.codigo_componente = c.codigo_componente WHERE c.peso > 15 
+        AND s.cantidad < 200;
+//21
+SELECT DISTINCT c.color FROM suministro s JOIN componentes c 
+ON s.codigo_componente = c.codigo_componente WHERE s.codigo_proveedor = 'P1';
+//22
+SELECT DISTINCT c.peso FROM suministro s JOIN componentes c 
+    ON s.codigo_componente = c.codigo_componente JOIN proveedores p 
+        ON s.codigo_proveedor = p.codigo_proveedor WHERE p.nombre = 'JUAN';
