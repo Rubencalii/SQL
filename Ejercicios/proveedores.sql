@@ -231,7 +231,7 @@ ALTER TABLE proveedores ADD COLUMN edad INT;
 ALTER TABLE suministro ADD clumn fecha_envio DATE, ADD COLUMN precio DECIMAL(10, 2);
 
 --28
-ALTER TABLE componentes RENAME COLUMN CNOMBRE TO nombre_componentes;
+ALTER TABLE componentes FROM COLUMN CNOMBRE TO nombre_componentes;
 
 --29
 ALTER TABLE articulos MODIFY COLUMN TNOMBRE VARCHAR(100);
