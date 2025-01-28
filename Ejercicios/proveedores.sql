@@ -187,3 +187,34 @@ ON s.codigo_componente = c.codigo_componente WHERE s.codigo_proveedor = 'P1';
 SELECT DISTINCT c.peso FROM suministro s JOIN componentes c 
     ON s.codigo_componente = c.codigo_componente JOIN proveedores p 
         ON s.codigo_proveedor = p.codigo_proveedor WHERE p.nombre = 'JUAN';
+//23
+SELECT s.*, p.ciudad FROM suministro s JOIN proveedores p 
+    ON s.codigo_proveedor = p.codigo_proveedor JOIN articulos a ON s.codigo_articulo = a.codigo_articulo
+        JOIN componentes c ON s.codigo_componente = c.codigo_componente 
+            WHERE p.ciudad = a.ciudad AND p.ciudad = c.ciudad;
+//24
+SELECT s.cantidad, p.categoria FROM suministro s JOIN articulos a 
+    ON s.codigo_articulo = a.codigo_articulo JOIN proveedores p  
+        ON s.codigo_proveedor = p.codigo_proveedor WHERE a.ciudad = 'MÁLAGA';
+//25
+SELECT p.nombre FROM proveedores p WHERE p.codigo_proveedor NOT IN (
+    SELECT s.codigo_proveedor FROM suministro s JOIN componentes c 
+        ON s.codigo_componente = c.codigo_componente WHERE c.nombre LIKE '%4%'
+);
+//26
+ALTER TABLE proveedores ADD COLUMN edad INT;
+//27
+ALTER TABLE suministro ADD COLUMN fecha_envio DATE, ADD COLUMN precio DECIMAL(10, 2);
+//28
+ALTER TABLE componentes RENAME COLUMN CNOMBRE TO nombre_componentes;
+//29
+ALTER TABLE articulos MODIFY COLUMN TNOMBRE VARCHAR(100);
+//30
+UPDATE proveedores SET ciudad = 'CACERES'WHERE nombre = 'JUAN';
+//31
+UPDATE proveedores SET categoria = categoria + 10 WHERE nombre = 'EVA';
+//32
+DELETE FROM suministro WHERE codigo_proveedor = 
+    (SELECT codigo_proveedor FROM proveedores WHERE nombre = 'INMA');
+//33
+DELETE FROM proveedores WHERE ciudad = 'SEVILLA';
