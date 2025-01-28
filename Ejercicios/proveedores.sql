@@ -113,23 +113,30 @@ INSERT INTO envios(p, c, t, cantidad) VALUES
 
 //1
 SELECT articulos, proveedores FROM ciudad WHERE ciudad='Caceres'
+
 //2
 SELECT articulos,envios From t WHERE t='t1'
+
 //3
 SELECT DISTINCT COLOR, CIUDAD FROM componentes;
+
 //4
 SELECT codigo, ciudad FROM articulos WHERE ciudad LIKE '%D' OR ciudad LIKE '%E%'
+
 //5
 SELECT p.codigo_proveedor FROM proveedores p JOIN suministro s ON p.codigo_proveedor = s.codigo_proveedor
     JOIN articulos a ON s.codigo_articulo = a.codigo_articulo WHERE a.codigo_articulo = 'T1'
         AND s.codigo_componente = 'C1';
+
 //6
 SELECT *
 FROM componentes c JOIN proveedores p ON c.codigo_proveedor = p.codigo_proveedor
         WHERE p.ciudad LIKE 'M%';
+
 //7
 SELECT a.TNOMBRE FROM articulos a JOIN suministro s ON a.codigo_articulo = s.codigo_articulo
     WHERE s.codigo_proveedor = 'P1' ORDER BY a.TNOMBRE;
+
 //8
 SELECT DISTINCT s.codigo_componente FROM suministro s JOIN articulos a 
     ON s.codigo_articulo = a.codigo_articulo JOIN proveedores p 
@@ -139,63 +146,79 @@ SELECT DISTINCT s.codigo_componente FROM suministro s JOIN articulos a
 SELECT DISTINCT p.codigo_proveedor FROM proveedores p JOIN suministro s ON p.codigo_proveedor = s.codigo_proveedor
     JOIN articulos a ON s.codigo_articulo = a.codigo_articulo WHERE (p.ciudad = 'SEVILLA' 
         OR p.ciudad = 'MADRID')AND s.codigo_componente = 'ROJO';
+
 //10
 SELECT s.codigo_componente FROM suministro s WHERE s.codigo_articulo IN (
     SELECT a.codigo_articulo FROM articulos a JOIN proveedores p 
          ON a.codigo_proveedor = p.codigo_proveedor WHERE p.ciudad = 'SEVILLA')
             AND s.codigo_proveedor IN (SELECT codigo_proveedor 
                 FROM proveedores WHERE ciudad = 'SEVILLA');
+
 //11
 SELECT DISTINCT a.codigo_articulo FROM articulos a JOIN suministro s ON a.codigo_articulo = s.codigo_articulo
     WHERE s.codigo_componente IN ( SELECT codigo_componente
         FROM suministro WHERE codigo_proveedor = 'P1');
+
 //12
 SELECT p.ciudad AS ciudad_proveedor, s.codigo_componente, a.ciudad AS ciudad_articulo
     FROM suministro s JOIN proveedores p ON s.codigo_proveedor = p.codigo_proveedor
         JOIN articulos a ON s.codigo_articulo = a.codigo_articulo;
+
 //13
 SELECT p.ciudad AS ciudad_proveedor, s.codigo_componente, a.ciudad AS ciudad_articulo
     FROM suministro s JOIN proveedores p ON s.codigo_proveedor = p.codigo_proveedor
         JOIN articulos a ON s.codigo_articulo = a.codigo_articulo WHERE p.ciudad != a.ciudad;
+
 //14
 SELECT s.* FROM suministro s JOIN articulos a 
     ON s.codigo_articulo = a.codigo_articulo WHERE a.TNOMBRE LIKE '%ora';
+
 //15
 SELECT DISTINCT a.codigo_articulo FROM articulos a JOIN suministro s 
     ON a.codigo_articulo = s.codigo_articulo JOIN proveedores p 
         ON s.codigo_proveedor = p.codigo_proveedor WHERE p.ciudad != 'MADRID' AND p.ciudad != a.ciudad;
+
 //16
 SELECT s.codigo_componente FROM suministro s WHERE s.codigo_articulo = 'T2'
     AND s.codigo_proveedor = 'P2';
+
 //17
 SELECT s.* FROM suministro s JOIN componentes c 
     ON s.codigo_componente = c.codigo_componente WHERE c.color != 'ROJO';
+
 //18
 SELECT DISTINCT s.codigo_proveedor FROM suministro s 
     WHERE s.codigo_articulo = 'T3' AND s.cantidad > 250;
 //19
+
 SELECT p.codigo_proveedor FROM proveedores p WHERE p.categoria > 20
   AND p.ciudad = 'SEVILLA';
 //20
+
 SELECT s.* FROM suministro s JOIN componentes c 
     ON s.codigo_componente = c.codigo_componente WHERE c.peso > 15 
         AND s.cantidad < 200;
 //21
+
 SELECT DISTINCT c.color FROM suministro s JOIN componentes c 
 ON s.codigo_componente = c.codigo_componente WHERE s.codigo_proveedor = 'P1';
+
 //22
 SELECT DISTINCT c.peso FROM suministro s JOIN componentes c 
     ON s.codigo_componente = c.codigo_componente JOIN proveedores p 
         ON s.codigo_proveedor = p.codigo_proveedor WHERE p.nombre = 'JUAN';
+
 //23
 SELECT s.*, p.ciudad FROM suministro s JOIN proveedores p 
     ON s.codigo_proveedor = p.codigo_proveedor JOIN articulos a ON s.codigo_articulo = a.codigo_articulo
         JOIN componentes c ON s.codigo_componente = c.codigo_componente 
             WHERE p.ciudad = a.ciudad AND p.ciudad = c.ciudad;
+
 //24
 SELECT s.cantidad, p.categoria FROM suministro s JOIN articulos a 
     ON s.codigo_articulo = a.codigo_articulo JOIN proveedores p  
         ON s.codigo_proveedor = p.codigo_proveedor WHERE a.ciudad = 'MÁLAGA';
+        
 //25
 SELECT p.nombre FROM proveedores p WHERE p.codigo_proveedor NOT IN (
     SELECT s.codigo_proveedor FROM suministro s JOIN componentes c 
@@ -222,6 +245,6 @@ UPDATE proveedores SET categoria = categoria + 10 WHERE nombre = 'EVA';
 //32
 DELETE FROM suministro WHERE codigo_proveedor = 
     (SELECT codigo_proveedor FROM proveedores WHERE nombre = 'INMA');
-    
+
 //33
 DELETE FROM proveedores WHERE ciudad = 'SEVILLA';
