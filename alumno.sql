@@ -1,5 +1,5 @@
 //Repaso y Segundo 2 trimestre
-/*
+
 CREATE TABLE coche(
     matricula varchar2(10) PRIMARY KEY,
     modelo varchar2(15),
@@ -193,6 +193,4 @@ INSERT into pokemon_ataques ('2','1','24','Nivel')
     ('4','2','36','Nivel')
     ('4','5','NULL','MT/MO')
     ('4','6','10','Nivel')
-    ('4','1','50','Nivel')
-*/
-
+    ('4','1','50','Nivel');

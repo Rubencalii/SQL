@@ -386,7 +386,7 @@ AND p.nombre='Boligrafo azul' AND c.cantidad > (
             AND p1.nombre='Boligrafo azul'
 )
 /*Subconsulta*/
-//1
+--1
 
 SELECT nombre FROM trabajador 
     WHERE tienda = ANY(
@@ -394,13 +394,13 @@ SELECT nombre FROM trabajador
                     WHERE nombre IN ('Pedro','Manuel')
     );
 
-//2
+--2
 
 SELECT * FROM cliente WHERE fecha_nac <= ALL (
         SELECT fecha_nac FROM cliente
 );
 
-//3
+--3
 
 SELECT nombre FROM cliente where dni = ANY (
         SELECT cliente, producto FROM compra
@@ -408,9 +408,9 @@ SELECT nombre FROM cliente where dni = ANY (
        
         );
 
-//Ejercicios
+--Ejercicios
 
-//1
+--1
 
 SELECT nombre FROM cliente WHERE nombre != ALL SELECT nombre FROM cliente where dni = ANY (
         SELECT cliente, producto FROM compra
@@ -418,13 +418,15 @@ SELECT nombre FROM cliente WHERE nombre != ALL SELECT nombre FROM cliente where 
        
         );
 
-//2
+--2
 
 SELECT nombre FROM cliente WHERE dni = 
        ANY (SELECT cliente FROM compra              
             WHERE producto = ANY (SELECT cod FROM producto 
                     WHERE NOMBRE !='Boligrafo azul'));
 
-//3
+--3
 
 SELECT * FROM tienda where metros>= ALL(SELECT metros FROM tienda);
+
+--Ejercicios--
