@@ -429,4 +429,5 @@ SELECT nombre FROM cliente WHERE dni =
 
 SELECT * FROM tienda where metros>= ALL(SELECT metros FROM tienda);
 
---Ejercicios--
+--JOIN--
+
