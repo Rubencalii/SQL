@@ -39,9 +39,9 @@ CREATE TABLE desarrolladores (
     AñoFundacion INT
 );
 
---VALORES DE LA TABLA--
+/*Valores de la Tabla*/
 
---VIDEOJUEGOS--
+/*Videojuegos*/
 
 INSERT INTO videojuegos(ID_videojuegos, Titulo, PEGI, ID_desarrolladora) VALUES
     (1, 'Cyberpunk 2077', '+18' , 1);
@@ -54,7 +54,7 @@ INSERT INTO videojuegos(ID_videojuegos, Titulo, PEGI, ID_desarrolladora) VALUES
 INSERT INTO videojuegos(ID_videojuegos, Titulo, PEGI, ID_desarrolladora) VALUES
     (5, 'Spyro the Dragon','+3'  ,6);
 
---lANZAMIENTO--
+/*lANZAMIENTO*/
 
 INSERT INTO lanzamientos(ID_Juego, ID_Consola, FechaLanzamiento) VALUES 
     (1 , 2 , '10/12/2020');
@@ -73,7 +73,7 @@ INSERT INTO lanzamientos(ID_Juego, ID_Consola, FechaLanzamiento) VALUES
 INSERT INTO lanzamientos(ID_Juego, ID_Consola, FechaLanzamiento) VALUES 
     (5 , 1 , '09/09/1998');
 
---CONSOLA--
+/*CONSOLA*/
 
 INSERT INTO consolas (Nombre, ID_Fabricante, FechaLanzamiento, Generación)VALUES
     ('PlayStation 5', 3, '1994-12-03', 5),
@@ -86,7 +86,7 @@ INSERT INTO consolas (Nombre, ID_Fabricante, FechaLanzamiento, Generación)VALUE
 INSERT INTO consolas (Nombre, ID_Fabricante, FechaLanzamiento, Generación)VALUES
     ('Nintendo Switch', 2, '2017-03-03', 8);
 
---GENERO--
+/*GENERO*/
 
 INSERT INTO Generos (ID, Nombre)VALUES
     (1, 'RPG'),
@@ -99,7 +99,7 @@ INSERT INTO Generos (ID, Nombre)VALUES
 INSERT INTO Generos (ID, Nombre)VALUES
     (5, '3rd Person Shooter');
 
---Juego_Genero--
+/*Juego_Genero*/
 
 INSERT INTO Juego_Genero (ID_juego, ID_genero)VALUES
     (1, 1),
@@ -124,7 +124,7 @@ INSERT INTO Juego_Genero (ID_juego, ID_genero)VALUES
 INSERT INTO Juego_Genero (ID_juego, ID_genero)VALUES
     (5, 3);
 
---Desarrolladores--
+/*Desarrolladores*/
 
 INSERT INTO Desarrolladoras (ID, Nombre, PaisOrigen, AñoFundación)VALUES
     (1, 'CD Projekt Red', 'Polonia', 1994),
@@ -141,4 +141,25 @@ INSERT INTO Desarrolladoras (ID, Nombre, PaisOrigen, AñoFundación)VALUES
 INSERT INTO Desarrolladoras (ID, Nombre, PaisOrigen, AñoFundación)VALUES
     (7, 'Microsoft', 'Estados Unidos', 1975);
 
---Consultas--
+/*Consultas*/
+
+/*1*/
+SELECT v.Titulo FROM videojuegos v JOIN desarrolladores d 
+    ON v.ID_desarrolladora = d.ID WHERE d.PaisOrigen = 'Japón';
+/*2*/
+SELECT v.Titulo FROM videojuegos v JOIN desarrolladores d ON v.ID_desarrolladora = d.ID
+    WHERE v.PEGI > ( SELECT PEGI FROM videojuegos v2 JOIN desarrolladores d2 ON v2.ID_desarrolladora = d2.ID WHERE d2.PaisOrigen = 'Suecia' LIMIT 1
+);
+/*3*/
+SELECT DISTINCT d.Nombre FROM desarrolladores d JOIN videojuegos v ON d.ID = v.ID_desarrolladora
+    JOIN lanzamientos l ON v.ID = l.ID_Juego WHERE l.FechaLanzamiento > '2015-01-01';
+/*4*/
+SELECT v.Titulo FROM videojuegos v JOIN lanzamientos l ON v.ID = l.ID_Juego GROUP BY v.Titulo
+    HAVING COUNT(l.ID_Consola) > ( SELECT COUNT(l2.ID_Consola) FROM lanzamientos l2
+        JOIN videojuegosv2 ON l2.ID_Juego = v2.IDWHERE v2.Titulo = 'Cyberpunk 2077'
+);
+/*5*/
+SELECT c.Nombre FROM consolas c WHERE c.FechaLanzamiento > (
+    SELECT MIN(c2.FechaLanzamiento) FROM consolas c2 JOIN desarrolladores d 
+        ON c2.ID_Fabricante = d.ID WHERE d.Nombre LIKE 'Nintendo%'
+);
