@@ -202,28 +202,30 @@ ALTER TABLE Consolas DROP COLUMN Generacion;
 DELETE FROM Lanzamientos WHERE ID_Consola = (
     SELECT ID FROM Consolas WHERE Nombre = 'PlayStation 1');
 /*18*/
-SELECT d.Nombre, AVG(CASE
-                        WHEN v.PEGI = '+18' THEN 18
-                        WHEN v.PEGI = '+16' THEN 16
-                        WHEN v.PEGI = '+12' THEN 12
-                        WHEN v.PEGI = '+7' THEN 7
-                        ELSE 3
-                    END) AS PromedioPEGI
+SELECT d.Nombre, AVG
+            (CASE
+                    WHEN v.PEGI = '+18' THEN 18
+                    WHEN v.PEGI = '+16' THEN 16
+                    WHEN v.PEGI = '+12' THEN 12
+                    WHEN v.PEGI = '+7' THEN 7
+                    ELSE 3
+
+            END) AS PromedioPEGI
     FROM Desarrolladores d JOIN Videojuegos v ON d.ID = v.ID_desarrolladora
-    GROUP BY d.IDHAVING AVG(CASE
-                WHEN v.PEGI = '+18' THEN 18
-                WHEN v.PEGI = '+16' THEN 16
-                WHEN v.PEGI = '+12' THEN 12
-                WHEN v.PEGI = '+7' THEN 7
-                ELSE 3
-            END) > (
-    SELECT AVG(CASE
+    GROUP BY d.IDHAVING AVG
+            (CASE
+                    WHEN v.PEGI = '+18' THEN 18
+                    WHEN v.PEGI = '+16' THEN 16
+                    WHEN v.PEGI = '+12' THEN 12
+                    WHEN v.PEGI = '+7' THEN 7
+                    ELSE 3
+            END) > (SELECT AVG(CASE
                     WHEN v2.PEGI = '+18' THEN 18
                     WHEN v2.PEGI = '+16' THEN 16
                     WHEN v2.PEGI = '+12' THEN 12
                     WHEN v2.PEGI = '+7' THEN 7
-                    ELSE 3
-                END)
+                    ELSE 3 
+            END)
     FROM Videojuegos v2 JOIN Desarrolladores d2 ON v2.ID_desarrolladora = d2.ID
         WHERE d2.PaisOrigen = d.PaisOrigen);
 /*19*/
