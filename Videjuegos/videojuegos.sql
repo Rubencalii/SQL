@@ -236,13 +236,27 @@ SELECT g.Nombre, COUNT(jg.ID_juego) AS JuegosLanzados FROM Generos g JOIN Juego_
         JOIN Consolas c ON l.ID_Consola = c.ID WHERE c.Generacion = 9 GROUP BY g.ID_genero
             ORDER BY JuegosLanzados DESC LIMIT 1;
 /*21*/
-
+SELECT d.Nombre FROM Desarrolladores d JOIN Videojuegos v ON d.ID = v.ID_desarrolladora
+    JOIN Juego_Genero jg ON v.ID = jg.ID_juego GROUP BY d.ID HAVING COUNT
+    (DISTINCT jg.ID_genero)  = (SELECT COUNT(*) FROM Generos);
 /*22*/
-
+SELECT v.Titulo FROM Videojuegos v JOIN Lanzamientos l ON v.ID = l.ID_Juego JOIN Consolas c 
+    ON l.ID_Consola = c.ID GROUP BY v.ID HAVING COUNT(DISTINCT c.Generación) >= 3;
 /*23*/
-
+SELECT v.Titulo FROM Videojuegos v JOIN Lanzamientos l ON v.ID = l.ID_Juego JOIN Consolas c 
+    ON l.ID_Consola = c.ID WHERE c.ID_Fabricante = 5  HAVING COUNT
+        (DISTINCT c.ID) = (SELECT COUNT(*) FROM Consolas WHERE ID_Fabricante = 5);
 /*24*/
-
+SELECT c.Nombre AS Consola, g.Nombre AS Genero,
+       (COUNT(jg.ID_juego) * 100.0 / (SELECT COUNT(*) FROM Lanzamientos l2 WHERE l2.ID_Consola = c.ID)) AS Porcentaje
+    FROM Consolas c JOIN Lanzamientos l ON c.ID = l.ID_Consola JOIN Videojuegos v ON l.ID_Juego = v.ID
+        JOIN Juego_Genero jg ON v.ID = jg.ID_juego JOIN Generos g ON jg.ID_genero = g.ID GROUP BY c.ID, g.ID;
 /*25*/
+SELECT v.Titulo FROM Videojuegos v JOIN Lanzamientos l ON v.ID = l.ID_Juego
+    JOIN Consolas c ON l.ID_Consola = c.ID WHERE c.is_supported = 0;
 
 /*26*/
+SELECT c.Nombre AS Consola, COUNT(DISTINCT g.ID) AS Generos_Lanzados FROM Consolas c
+    JOIN Lanzamientos l ON c.ID = l.ID_Consola JOIN Videojuegos v ON l.ID_Juego = v.ID JOIN Juego_Genero jg ON v.ID = jg.ID_juego
+        JOIN Generos g ON jg.ID_genero = g.ID WHERE YEAR(l.FechaLanzamiento) = (SELECT MIN(YEAR(FechaLanzamiento)) 
+            FROM Lanzamientos WHERE ID_Consola = c.ID) GROUP BY c.ID;
