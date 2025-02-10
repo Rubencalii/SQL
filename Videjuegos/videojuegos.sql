@@ -163,44 +163,86 @@ SELECT c.Nombre FROM consolas c WHERE c.FechaLanzamiento > (
     SELECT MIN(c2.FechaLanzamiento) FROM consolas c2 JOIN desarrolladores d 
         ON c2.ID_Fabricante = d.ID WHERE d.Nombre LIKE 'Nintendo%'
 );
-/*6/
+/*6*/
+SELECT g.ID_genero, g.Nombre FROM generos g 
+    LEFT JOIN juego_genero jg ON g.ID_genero = JG.ID_genero WHERE JG.ID_Juego is NULL;
+/*7*/
+SELECT v.Titulo, C.Nombre AS consolas, l.FechaLanzamiento FROM videojuegos v 
+    JOIN lanzamientos l ON v.ID = l.ID_Juego JOIN consolas ON l.ID_Consola = c.ID
+        JOIN desarrolladores d on c.ID_Fabricante = d.ID WHERE d.Nombre = 'Sony Interactive'
+/*8*/
+SELECT d.Nombre, d.PaisOrig, d.AñoFundacion 
+    FROM desarrolladores d WHERE d.AñoFundacion 
+        <(SELECT MIN (d2.AñoFundacion) FROM desarrolladores d2 WHERE d2.PaisOrig = 'Estados Unidos ');
+/*9*/
+SELECT v.Titulo FROM Videojuegos v JOIN Juego_Genero jg ON v.ID = jg.ID_juego
+    JOIN Generos g ON jg.ID_genero = g.ID_genero WHERE NOT EXISTS (SELECT 1
+        FROM Juego_Genero jg2 JOIN Generos g2 ON jg2.ID_genero = g2.ID_genero
+            WHERE jg2.ID_juego = v.ID AND g2.Nombre = '3rd Person Shooter'
+);
+/*10*/
+SELECT Titulo FROM Videojuegos WHERE Titulo LIKE 'The%';
+/*11*/
+SELECT Nombre FROM Generos WHERE LENGTH(Nombre) = 8;
+/*12*/
+SELECT d.Nombre AS Desarrolladora, c.Nombre AS Consola FROM Desarrolladores d
+    JOIN Consolas c ON d.ID = c.ID_Fabricante;
+/*13*/
+SELECT v.Titulo FROM Videojuegos v JOIN Juego_Genero jg ON v.ID = jg.ID_juego
+    GROUP BY v.ID HAVING COUNT(jg.ID_genero) > 1;
+/*14*/
+SELECT g.Nombre, COUNT(jg.ID_juego) AS JuegosAsignados FROM Generos g 
+    LEFT JOIN Juego_Genero jg ON g.ID_genero = jg.ID_genero GROUP BY g.ID_genero;
+/*15*/
+SELECT c.Nombre AS Consola, MAX(l.FechaLanzamiento) AS UltimoLanzamiento
+    FROM Consolas c JOIN Lanzamientos l ON c.ID = l.ID_Consola GROUP BY c.ID;
+/*16*/
+ALTER TABLE Consolas DROP COLUMN Generacion;
+/*17*/
+DELETE FROM Lanzamientos WHERE ID_Consola = (
+    SELECT ID FROM Consolas WHERE Nombre = 'PlayStation 1');
+/*18*/
+SELECT d.Nombre, AVG(CASE
+                        WHEN v.PEGI = '+18' THEN 18
+                        WHEN v.PEGI = '+16' THEN 16
+                        WHEN v.PEGI = '+12' THEN 12
+                        WHEN v.PEGI = '+7' THEN 7
+                        ELSE 3
+                    END) AS PromedioPEGI
+    FROM Desarrolladores d JOIN Videojuegos v ON d.ID = v.ID_desarrolladora
+    GROUP BY d.IDHAVING AVG(CASE
+                WHEN v.PEGI = '+18' THEN 18
+                WHEN v.PEGI = '+16' THEN 16
+                WHEN v.PEGI = '+12' THEN 12
+                WHEN v.PEGI = '+7' THEN 7
+                ELSE 3
+            END) > (
+    SELECT AVG(CASE
+                    WHEN v2.PEGI = '+18' THEN 18
+                    WHEN v2.PEGI = '+16' THEN 16
+                    WHEN v2.PEGI = '+12' THEN 12
+                    WHEN v2.PEGI = '+7' THEN 7
+                    ELSE 3
+                END)
+    FROM Videojuegos v2 JOIN Desarrolladores d2 ON v2.ID_desarrolladora = d2.ID
+        WHERE d2.PaisOrigen = d.PaisOrigen);
+/*19*/
+SELECT d.Nombre FROM Desarrolladores d JOIN Videojuegos v ON d.ID = v.ID_desarrolladora
+    JOIN Juego_Genero jg ON v.ID = jg.ID_juego GROUP BY d.ID
+        HAVING COUNT(DISTINCT jg.ID_genero) = (SELECT COUNT(*) FROM Generos);
+/*20*/
+SELECT g.Nombre, COUNT(jg.ID_juego) AS JuegosLanzados FROM Generos g JOIN Juego_Genero jg 
+    ON g.ID_genero = jg.ID_genero JOIN Videojuegos v ON jg.ID_juego = v.ID JOIN Lanzamientos l ON v.ID = l.ID_Juego
+        JOIN Consolas c ON l.ID_Consola = c.ID WHERE c.Generacion = 9 GROUP BY g.ID_genero
+            ORDER BY JuegosLanzados DESC LIMIT 1;
+/*21*/
 
-/*7/
+/*22*/
 
-/*8/
+/*23*/
 
-/*9/
+/*24*/
 
-/*10/
+/*25*/
 
-/*11/
-
-/*12/
-
-/*13/
-
-/*14/
-
-/*15/
-
-/*16/
-
-/*17/
-
-/*18/
-
-/*19/
-
-/*20/
-
-/*21/
-
-/*22/
-
-/*23/
-
-/*24/
-
-/*25/
-
-/*26/
+/*26*/
