@@ -262,3 +262,48 @@ SELECT c.Nombre AS Consola, COUNT(DISTINCT g.ID) AS Generos_Lanzados FROM Consol
     JOIN Lanzamientos l ON c.ID = l.ID_Consola JOIN Videojuegos v ON l.ID_Juego = v.ID JOIN Juego_Genero jg ON v.ID = jg.ID_juego
         JOIN Generos g ON jg.ID_genero = g.ID WHERE YEAR(l.FechaLanzamiento) = (SELECT MIN(YEAR(FechaLanzamiento)) 
             FROM Lanzamientos WHERE ID_Consola = c.ID) GROUP BY c.ID;
+
+/*MANIPULACION DE RESULTADOS*/
+
+/*27*/
+
+SELECT*FROM desarrolladores WHERE ='Estados Unidos';
+
+INTERSECT
+
+SELECT*FROM desarrolladores WHERE ='Japon';
+
+/*28*/
+
+/*29*/
+
+/*30*/
+
+/*31*/
+
+/*32*/
+
+/*33*/
+
+SELECT*FROM lanzamientos WHERE =' / /2018';
+
+INTERSECT
+
+SELECT*FROM Lanzamientos WHERE =' / /2020';
+
+/*34*/
+
+SELECT d.nombre FROM desarrolladores d LEFT JOIN juegos j 
+    ON d.id_desarrollador = j.id_desarrollador AND j.genero = 'Sandbox' 
+        WHERE j.id_juego IS NULL;
+
+/*35*/
+
+SELECT*FROM generos WHERE ='Acción';
+
+UNION
+
+SELECT*FROM generos WHERE ='Aventura';
+
+/*36*/
+
