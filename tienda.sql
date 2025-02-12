@@ -429,5 +429,50 @@ SELECT nombre FROM cliente WHERE dni =
 
 SELECT * FROM tienda where metros>= ALL(SELECT metros FROM tienda);
 
---JOIN--
+--Manipulacion de resultados--
 
+--1--
+
+SELECT cliente FROM cliente cli JOIN compra c ON producto p JOIN c.producto=p.cod
+    WHERE p.nombre='Lapiz negro';
+    
+INTERSECT
+
+SELECT cliente FROM compra c JOIN producto p ON c.producto=p.cod
+    WHERE p.nombre='Boligrafo azul';
+
+
+--2--
+
+SELECT producto FROM oferta 
+    WHERE tienda=2;
+
+INTERSECT
+
+SELECT producto FROM oferta 
+    WHERE tienda=3;
+
+--3--
+
+SELECT cod FROM tienda WHERE metros>100;
+
+UNION
+
+SELECT tienda FROM oferta WHERE producto=3;
+    
+--4--
+
+SELECT dni FROM cliente
+
+MINUS
+
+SELECT cliente FROM compra c JOIN producto p On c.producto=p.cod
+    WHERE p.tipo=2;
+    
+--5--
+
+SELECT*FROM trabajador WHERE tienda=3;
+
+INTERSECT
+
+SELECT*FROM trabajador WHERE area='Caja';
