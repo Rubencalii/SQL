@@ -275,6 +275,18 @@ SELECT*FROM desarrolladores WHERE ='Japon';
 
 /*28*/
 
+SELECT v.Titulo, g.Nombre AS Genero, d.Nombre AS Desarrolladora FROM Videojuegos v
+    JOIN lanzamientos l ON v.ID = l.ID_Juego JOIN Consolas c ON l.ID_Consola = c.ID
+        JOIN juego_genero jg ON v.ID = jg.ID_juego JOIN Generos g ON jg.ID_genero = g.ID_genero
+            JOIN desarrolladores d ON v.ID_desarrolladora = d.ID WHERE c.Nombre = 'PS5'
+
+INTERSECT
+
+SELECT v.Titulo, g.Nombre AS Genero, d.Nombre AS Desarrolladora FROM Videojuegos v
+    JOIN lanzamientos l ON v.ID = l.ID_Juego JOIN Consolas c ON l.ID_Consola = c.ID
+        JOIN juego_genero jg ON v.ID = jg.ID_juego JOIN Generos g ON jg.ID_genero = g.ID_genero
+            JOIN desarrolladores d ON v.ID_desarrolladora = d.ID WHERE c.Nombre = 'XBOX X';
+
 /*29*/
 
 /*30*/
@@ -283,6 +295,7 @@ SELECT*FROM desarrolladores WHERE ='Japon';
 
 /*32*/
 
+SELECT*FROM consolas 
 /*33*/
 
 SELECT*FROM lanzamientos WHERE =' / /2018';
@@ -304,6 +317,3 @@ SELECT*FROM generos WHERE ='Acción';
 UNION
 
 SELECT*FROM generos WHERE ='Aventura';
-
-/*36*/
-
