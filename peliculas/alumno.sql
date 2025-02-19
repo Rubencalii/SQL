@@ -68,41 +68,8 @@ INSERT INTO PROYECCIONES (Sala, Pelicula, Hora, Ocupacion) VALUES
 
 //Realiza las consultas
 
-/*4.7*/
-
-SELECT Hora, SUM(Ocupacion) AS TotalEntradasVendidas 
-    FROM PROYECCIONES GROUP BY Hora;
-
-/*4.8*/
-
-SELECT PELICULAS.nombre FROM PELICULAS LEFT JOIN PROYECCIONES 
-    ON PELICULAS.P = PROYECCIONES.Pelicula WHERE PROYECCIONES.Pelicula IS NULL;
-    
-/*4.9*/
-
-SELECT nacionalidad, COUNT(*) AS TotalPeliculas FROM PELICULAS
-    WHERE P IN (SELECT Pelicula FROM PROYECCIONES)GROUP BY nacionalidad
-        ORDER BY TotalPeliculas DESC LIMIT 1;
-
-/*4.14*/
-
-SELECT PELICULAS.nombre FROM PELICULAS JOIN PROYECCIONES 
-    ON PELICULAS.P = PROYECCIONES.Pelicula WHERE PROYECCIONES.Hora BETWEEN '00:00' AND '12:00';
-
-/*4.16*/
-
-SELECT Sala, MAX(Ocupacion) AS MaxOcupacion FROM PROYECCIONES 
-    WHERE Hora = '23:00' GROUP BY Sala ORDER BY MaxOcupacion DESC LIMIT 1;
-
-/*4.20*/
 
 
-
-/*4.22*/
-
-
-
-/*4.31*/
 
 
 
@@ -125,3 +92,89 @@ ALTER TABLE SALASMODIFY Capacidad DECIMAL(5, 2);
 SELECT P.nacionalidad FROM PELICULAS P JOIN PROYECCIONES PJ 
     ON P.P = PJ.Pelicula GROUP BY P.nacionalidad 
         HAVING SUM(PJ.Ocupacion * 10) > 2000;
+
+/*4.1*/
+
+SELECT nombre FROM peliculas;
+
+/*4.2*/
+
+SELECT calificacion FROM peliculas;
+
+/*4.3*/
+
+SELECT * FROM peliculas WHERE calificacion = '';
+
+/*4.4*/
+
+SELECT * FROM salas WHERE capacidad DESC;
+
+/*4.5*/
+
+SELECT * FROM SALAS WHERE S NOT IN (SELECT DISTINCT Sala FROM PROYECCIONES);
+
+/*4.6*/
+
+SELECT S.nombre AS Sala, P.nombre AS Pelicula, P.calificacion, P.nacionalidad
+    FROM SALAS S JOIN PROYECCIONES PR ON S.S = PR.Sala JOIN PELICULAS P ON PR.Pelicula = P.P;
+    
+/*4.7*/
+
+SELECT Hora, SUM(Ocupacion) AS TotalEntradasVendidas 
+    FROM PROYECCIONES GROUP BY Hora;
+    
+/*4.8*/
+
+SELECT PELICULAS.nombre FROM PELICULAS LEFT JOIN PROYECCIONES 
+    ON PELICULAS.P = PROYECCIONES.Pelicula WHERE PROYECCIONES.Pelicula IS NULL;
+    
+/*4.9*/
+
+SELECT nacionalidad, COUNT(*) AS TotalPeliculas FROM PELICULAS
+    WHERE P IN (SELECT Pelicula FROM PROYECCIONES)GROUP BY nacionalidad
+        ORDER BY TotalPeliculas DESC LIMIT 1;
+        
+/*4.10*/
+
+SELECT S.* FROM SALAS S JOIN PROYECCIONES PR ON S.S = PR.Sala JOIN PELICULAS P ON PR.Pelicula = P.P
+    WHERE P.nombre IN ('Emoji: la película', 'Spiderman') GROUP BY S.S HAVING COUNT(DISTINCT P.nombre) = 2;
+    
+/*4.11*/
+
+SELECT * FROM PELICULAS  WHERE calificacion IN ('7', '18');
+
+/*4.12*/
+
+SELECT PR.*, P.nombre AS Pelicula, P.calificacion FROM PROYECCIONES PR
+    JOIN PELICULAS P ON PR.Pelicula = P.P WHERE P.calificacion = 'TP';
+    
+/*4.13*/
+
+SELECT P.nacionalidad, P.nombre AS Pelicula, PR.Hora FROM PELICULAS P
+    JOIN PROYECCIONES PR ON P.P = PR.Pelicula ORDER BY P.nacionalidad, P.nombre, PR.Hora;
+
+/*4.14*/
+
+SELECT PELICULAS.nombre FROM PELICULAS JOIN PROYECCIONES 
+    ON PELICULAS.P = PROYECCIONES.Pelicula WHERE PROYECCIONES.Hora BETWEEN '00:00' AND '12:00';
+
+/*4.15*/
+
+
+
+/*4.16*/
+
+SELECT Sala, MAX(Ocupacion) AS MaxOcupacion FROM PROYECCIONES 
+    WHERE Hora = '23:00' GROUP BY Sala ORDER BY MaxOcupacion DESC LIMIT 1;
+    
+/*4.17*/
+
+SELECT P.nombre AS Pelicula, PR.Hora, MAX(PR.Ocupacion) AS Ocupacion_Maxima FROM PROYECCIONES PR
+    JOIN PELICULAS P ON PR.Pelicula = P.P GROUP BY P.nombre, PR.Hora 
+        ORDER BY Ocupacion_Maxima DESC LIMIT 1;
+        
+/*4.18*/
+
+SELECT S.nombre AS Sala, P.nombre AS Pelicula, MIN(PR.Ocupacion) AS Menor_Ocupacion FROM SALAS S
+    JOIN PROYECCIONES PR ON S.S = PR.Sala JOIN PELICULAS P ON PR.Pelicula = P.P 
+        GROUP BY S.nombre ORDER BY Menor_Ocupacion ASC;
