@@ -68,11 +68,6 @@ INSERT INTO PROYECCIONES (Sala, Pelicula, Hora, Ocupacion) VALUES
 
 //Realiza las consultas
 
-
-
-
-
-
 /*4.35*/
 
 UPDATE SALAS SET Planta = 'Planta Baja' WHERE S IN (1, 2, 3);  
@@ -178,3 +173,18 @@ SELECT P.nombre AS Pelicula, PR.Hora, MAX(PR.Ocupacion) AS Ocupacion_Maxima FROM
 SELECT S.nombre AS Sala, P.nombre AS Pelicula, MIN(PR.Ocupacion) AS Menor_Ocupacion FROM SALAS S
     JOIN PROYECCIONES PR ON S.S = PR.Sala JOIN PELICULAS P ON PR.Pelicula = P.P 
         GROUP BY S.nombre ORDER BY Menor_Ocupacion ASC;
+
+
+DECLARE 
+
+    nom_sala VARCHAR(30);
+    cap_sala sala.capacidad%TYPE;
+    
+BEGIN
+
+    SELECT nombre, capacidad INTO nom_sala, cap_sala FROM sala WHERE s='s3';
+    
+    DBMS_OUTPUT.put_line('Nombre de la sala 3: '||nom_sala);
+    DBMS_OUTPUT.put_line('Capacidad de la sala: '||cap_sala);
+    
+END;
