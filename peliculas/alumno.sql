@@ -33,14 +33,14 @@ INSERT INTO salas VALUES('S1', 'Africa', '125', '10');
     
 INSERT INTO peliculas VALUES ('P1', 'Minios: el origen de Gru', 'TP', 'EEUU');
     ('P2', 'Black Panther: Wakandaforever', '18', 'EEUU');
-    ('P3', 'AstÈrix y ObÈlix: el reino medio', '7', 'Francia');
-    ('P4', 'El autor', 'NULL', 'EspaÒa');
-    ('P5', 'Perfectos desconocidos', '18', 'EspaÒa');
+    ('P3', 'AstÔøΩrix y ObÔøΩlix: el reino medio', '7', 'Francia');
+    ('P4', 'El autor', 'NULL', 'EspaÔøΩa');
+    ('P5', 'Perfectos desconocidos', '18', 'EspaÔøΩa');
     ('P6', 'ResidentEvil', '18', 'NULL');
-    ('P7', 'Tadeo Jones 3', 'TP', 'EspaÒa');
+    ('P7', 'Tadeo Jones 3', 'TP', 'EspaÔøΩa');
     ('P8', 'Eiffel', '7', 'Francia');
-    ('P9', 'PuÒales por la espalda 2', '18', 'EEUU');
-    ('P10', 'La abuela', 'NULL', 'EspaÒa');
+    ('P9', 'PuÔøΩales por la espalda 2', '18', 'EEUU');
+    ('P10', 'La abuela', 'NULL', 'EspaÔøΩa');
     
 INSERT INTO PROYECCIONES (Sala, Pelicula, Hora, Ocupacion) VALUES 
     ('S1', 'P1', '12:00', 75),
@@ -132,7 +132,7 @@ SELECT nacionalidad, COUNT(*) AS TotalPeliculas FROM PELICULAS
 /*4.10*/
 
 SELECT S.* FROM SALAS S JOIN PROYECCIONES PR ON S.S = PR.Sala JOIN PELICULAS P ON PR.Pelicula = P.P
-    WHERE P.nombre IN ('Emoji: la pelÌcula', 'Spiderman') GROUP BY S.S HAVING COUNT(DISTINCT P.nombre) = 2;
+    WHERE P.nombre IN ('Emoji: la pelÔøΩcula', 'Spiderman') GROUP BY S.S HAVING COUNT(DISTINCT P.nombre) = 2;
     
 /*4.11*/
 
@@ -188,3 +188,105 @@ BEGIN
     DBMS_OUTPUT.put_line('Capacidad de la sala: '||cap_sala);
     
 END;
+
+/*Ejercicio 1: Pedir al usuario un numero y ver si el numero es positivo o negativo*/
+
+DECLARE
+    num NUMBER;
+BEGIN
+    -- Asigna un valor a la variable num
+    num := &numero;  
+
+    -- Verifica si el n√∫mero es positivo o negativo
+    IF (num > 0) THEN
+        DBMS_OUTPUT.PUT_LINE('El n√∫mero es positivo.');
+    ELSIF (num < 0) THEN
+        DBMS_OUTPUT.PUT_LINE('El n√∫mero es negativo.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('El n√∫mero es cero.');
+    END IF;
+END;
+
+
+/*Ejercicio 2: Pedir al usuario la edad y si es mayor de edad o no */
+
+DECLARE 
+    edad NUMBER;
+
+BEGIN 
+    --Asignar un valor a la variable edad;
+    edad := &edad
+
+    --Verificar si es mayor de edad o no 
+     IF (edad >= 18) THEN
+        DBMS_OUTPUT.PUT_LINE('Eres mayor de edad.');
+    ELSIF
+        DBMS_OUTPUT.PUT_LINE('Eres menor de edad.');
+    END IF; 
+END;
+
+/*Ejercicio 3: Comprobar si la sala 4 esta llena para la pelicula p4 a las 20.00*/
+
+DECLARE 
+
+    v_num_asientos_totales NUMBER;
+    v_num_asientos_ocupados NUMBER;
+BEGIN 
+    -- Obtener el n√∫mero total de asientos en la sala 4
+    
+    SELECT num_asientos
+    INTO num_asientos_totales
+    FROM salas
+    WHERE id_sala = 4;
+
+
+    SELECT * FROM 
+    INTO num_asientos_ocupados FROM reservas r JOIN peliculas p ON r.id_pelicula = p.id_pelicula
+        WHERE r.id_sala = 4 AND p.nombre_pelicula = 'P4' AND r.hora = TO_TIMESTAMP('20:00', 'HH24:MI');
+
+    --Monstrar si la sala esta ocupada o no
+
+    IF (num_asientos_ocupados  >= v_num_asientos_totales)
+         DBMS_OUTPUT.PUT_LINE('La sala 4 esta llena la pelicula P4 de las 20.00');
+    ELSIF
+         DBMS_OUTPUT.PUT_LINE('La sala 4 no est√° llena para la pel√≠cula P4 a las 20:00.'); 
+/*Ejercicio 4: Comprobar si quedan mas de 100 entradas para ver "Asterix y Oberlix: el reino medio" a las 18.00*/
+
+DECLARE
+    v_nombre_pelicula VARCHAR2(25);
+    v_hora TIME;
+    v_num_asientos_totales NUMBER;
+    v_num_asientos_reservados NUMBER;
+BEGIN
+    -- Pedir al usuario el nombre de la pel√≠cula
+    v_nombre_pelicula := '&nombre_pelicula';  
+
+    -- Pedir al usuario la hora de la pel√≠cula
+    v_hora := TO_TIMESTAMP('&hora', 'HH24:MI');  
+
+    -- Obtener el n√∫mero total de asientos de la sala correspondiente
+    SELECT num_asientos
+    INTO v_num_asientos_totales
+    FROM salas s
+    JOIN peliculas p ON s.id_sala = p.id_sala
+    WHERE p.nombre_pelicula = v_nombre_pelicula
+    AND p.hora = v_hora;
+
+    -- Contar los asientos reservados para la pel√≠cula y la hora especificada
+    SELECT NVL(SUM(num_asientos_reservados), 0)
+    INTO v_num_asientos_reservados
+    FROM reservas r
+    JOIN peliculas p ON r.id_pelicula = p.id_pelicula
+    WHERE p.nombre_pelicula = v_nombre_pelicula
+    AND r.hora = v_hora;
+
+    -- Verificar si quedan m√°s de 10 entradas disponibles
+    IF (v_num_asientos_totales - v_num_asientos_reservados) > 10 THEN
+        DBMS_OUTPUT.PUT_LINE('Quedan m√°s de 10 entradas disponibles para "' || v_nombre_pelicula || '" a las ' || TO_CHAR(v_hora, 'HH24:MI') || '.');
+    ELSIF
+        DBMS_OUTPUT.PUT_LINE('No quedan m√°s de 10 entradas disponibles para "' || v_nombre_pelicula || '" a las ' || TO_CHAR(v_hora, 'HH24:MI') || '.');
+    END IF;
+END;
+
+/*Ejercicio 5: Pedir al usuario un nombre de pelicula y comprobar si hay aun entradas disponibles para esa pelicula a la hora que el usuario desee.El usuario debera indicar cuantas entradas quiere comprar. En caso que haya entradas, el bloque se le vendera a 6,5 euros. En caso contrario le indicara al usuraio que eliga otra hora*/
+
