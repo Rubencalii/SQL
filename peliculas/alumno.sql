@@ -290,3 +290,107 @@ END;
 
 /*Ejercicio 5: Pedir al usuario un nombre de pelicula y comprobar si hay aun entradas disponibles para esa pelicula a la hora que el usuario desee.El usuario debera indicar cuantas entradas quiere comprar. En caso que haya entradas, el bloque se le vendera a 6,5 euros. En caso contrario le indicara al usuraio que eliga otra hora*/
 
+DECLARE
+    -- Variables para almacenar los datos ingresados por el usuario
+    v_nombre_pelicula  VARCHAR2(100);
+    v_hora             VARCHAR2(5);
+    v_entradas_solicitadas NUMBER;
+    v_entradas_disponibles NUMBER;
+
+    -- Variables de precio
+    v_precio_entrada   NUMBER := 6.5;
+    v_total_a_pagar    NUMBER;
+
+BEGIN
+    -- Solicitar los datos al usuario
+    DBMS_OUTPUT.PUT_LINE('Introduce el nombre de la película:');
+    -- Simulación de entrada de usuario (esto dependerá del entorno de ejecución)
+    v_nombre_pelicula := 'El Señor de los Anillos'; 
+
+    DBMS_OUTPUT.PUT_LINE('Introduce la hora de la película (formato HH24:MI):');
+    -- Simulación de entrada de usuario (esto dependerá del entorno de ejecución)
+    v_hora := '18:30';  
+
+    DBMS_OUTPUT.PUT_LINE('Introduce la cantidad de entradas que deseas comprar:');
+    -- Simulación de entrada de usuario (esto dependerá del entorno de ejecución)
+    v_entradas_solicitadas := 3; 
+
+    -- Consulta para obtener las entradas disponibles para la película y hora especificadas
+    SELECT entradas_disponibles
+    INTO v_entradas_disponibles
+    FROM funciones
+    WHERE nombre_pelicula = v_nombre_pelicula
+      AND hora = v_hora;
+
+    -- Comprobar si hay suficientes entradas
+    IF v_entradas_disponibles >= v_entradas_solicitadas THEN
+        -- Calcular el total a pagar
+        v_total_a_pagar := v_entradas_solicitadas * v_precio_entrada;
+        -- Vender las entradas (actualizar el número de entradas disponibles)
+        UPDATE funciones
+        SET entradas_disponibles = entradas_disponibles - v_entradas_solicitadas
+        WHERE nombre_pelicula = v_nombre_pelicula
+          AND hora = v_hora;
+        
+        DBMS_OUTPUT.PUT_LINE('Entradas vendidas con éxito.');
+        DBMS_OUTPUT.PUT_LINE('Total a pagar: ' || v_total_a_pagar || ' euros.');
+    ELSE
+        -- Si no hay suficientes entradas
+        DBMS_OUTPUT.PUT_LINE('Lo siento, no hay suficientes entradas disponibles para la hora indicada.');
+        DBMS_OUTPUT.PUT_LINE('Por favor, elija otra hora.');
+    END IF;
+
+END;
+/
+/*Ejercicio 6: Escribir un bloque PL/SQL tal que el usuario dara dos nombres de salas y el bloque le indicara que sala es mas grande, inidcando ademas la diferencia entra una sala y la otra*/
+
+DECLARE
+    -- Variables para almacenar los nombres de las salas
+    v_sala1 VARCHAR2(100);
+    v_sala2 VARCHAR2(100);
+    
+    -- Variables para almacenar el tamaño de las salas
+    v_tamano_sala1 NUMBER;
+    v_tamano_sala2 NUMBER;
+
+    -- Variable para almacenar la diferencia de tamaño
+    v_diferencia NUMBER;
+    
+BEGIN
+    -- Solicitar los datos al usuario (simulación)
+    DBMS_OUTPUT.PUT_LINE('Introduce el nombre de la primera sala:');
+    -- Simulación de la entrada del usuario
+    v_sala1 := 'Sala A';  
+    
+    DBMS_OUTPUT.PUT_LINE('Introduce el nombre de la segunda sala:');
+    -- Simulación de la entrada del usuario
+    v_sala2 := 'Sala B';  
+    
+    -- Obtener los tamaños de las salas desde la base de datos
+    SELECT tamano_sala
+    INTO v_tamano_sala1
+    FROM salas
+    WHERE nombre_sala = v_sala1;
+    
+    SELECT tamano_sala
+    INTO v_tamano_sala2
+    FROM salas
+    WHERE nombre_sala = v_sala2;
+
+    -- Calcular la diferencia de tamaño
+    v_diferencia := ABS(v_tamano_sala1 - v_tamano_sala2);
+    
+    -- Comparar el tamaño de las salas y mostrar el resultado
+    IF v_tamano_sala1 > v_tamano_sala2 THEN
+        DBMS_OUTPUT.PUT_LINE('La sala ' || v_sala1 || ' es más grande que la sala ' || v_sala2 || '.');
+        DBMS_OUTPUT.PUT_LINE('La diferencia de tamaño es de ' || v_diferencia || ' unidades.');
+    ELSIF v_tamano_sala1 < v_tamano_sala2 THEN
+        DBMS_OUTPUT.PUT_LINE('La sala ' || v_sala2 || ' es más grande que la sala ' || v_sala1 || '.');
+        DBMS_OUTPUT.PUT_LINE('La diferencia de tamaño es de ' || v_diferencia || ' unidades.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Ambas salas tienen el mismo tamaño.');
+    END IF;
+
+END;
+/
+
