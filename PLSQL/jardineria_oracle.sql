@@ -1315,3 +1315,89 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('Ocurrió un error: ' || SQLERRM);
 END;
 /
+      
+--------------------------------------------------------
+--  Ejercicio 7: 
+--------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION suma_pagos_cliente(p_codigo_cliente IN NUMBER) 
+    RETURN NUMBER IS
+    v_suma_pagos NUMBER := 0; 
+BEGIN
+   
+    SELECT NVL(SUM(monto_pago), 0) 
+    INTO v_suma_pagos
+    FROM pagos
+    WHERE codigo_cliente = p_codigo_cliente;
+
+    
+    IF v_suma_pagos = 0 THEN
+
+        RETURN -1;  
+        RETURN v_suma_pagos;  
+
+    END IF;
+
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        
+        RETURN -1;
+    WHEN OTHERS THEN
+        
+        RETURN -1;
+END;
+/
+      
+--------------------------------------------------------
+--  Ejercicio 8: 
+--------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE total_en_euros_pedido(p_codigo_pedido IN NUMBER) IS
+    v_total NUMBER := 0;
+    v_tipo_moneda VARCHAR2(3);  
+    v_limite NUMBER := 1000; 
+    CURSOR c_detalle_pedido IS
+        SELECT precio_unitario, cantidad, tipo_moneda
+        FROM detalle_pedido
+        WHERE codigo_pedido = p_codigo_pedido;
+
+    
+    e_limite_excedido EXCEPTION;
+BEGIN
+    
+    FOR producto IN c_detalle_pedido LOOP
+        
+        IF v_total + (producto.precio_unitario * producto.cantidad) > v_limite THEN
+            RAISE e_limite_excedido; 
+        END IF;
+
+        
+        IF producto.tipo_moneda = 'EUR' THEN
+            v_total := v_total + (producto.precio_unitario * producto.cantidad);
+        
+        ELSIF producto.tipo_moneda = 'USD' THEN
+            v_total := v_total + (producto.precio_unitario * producto.cantidad * 0.85);
+        END IF;
+    END LOOP;
+
+    
+    IF v_total = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('No se encontró el pedido con código ' || p_codigo_pedido);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('El total en euros del pedido con código ' || p_codigo_pedido || ' es: ' || v_total);
+    END IF;
+
+EXCEPTION
+    
+    WHEN e_limite_excedido THEN
+        DBMS_OUTPUT.PUT_LINE('Se ha excedido el límite de total para el pedido ' || p_codigo_pedido);
+        DBMS_OUTPUT.PUT_LINE('El total en euros es: 0');
+    
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No se encontró el pedido con código ' || p_codigo_pedido);
+        DBMS_OUTPUT.PUT_LINE('El total en euros es: 0');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Ocurrió un error inesperado: ' || SQLERRM);
+        DBMS_OUTPUT.PUT_LINE('El total en euros es: 0');
+END;
+/
