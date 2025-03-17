@@ -1360,9 +1360,7 @@ CREATE OR REPLACE PROCEDURE total_en_euros_pedido(p_codigo_pedido IN NUMBER) IS
         SELECT precio_unitario, cantidad, tipo_moneda
         FROM detalle_pedido
         WHERE codigo_pedido = p_codigo_pedido;
-
-    
-    e_limite_excedido EXCEPTION;
+        
 BEGIN
     
     FOR producto IN c_detalle_pedido LOOP
