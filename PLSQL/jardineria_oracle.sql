@@ -1399,3 +1399,102 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('El total en euros es: 0');
 END;
 /
+      
+--------------------------------------------------------
+--  Ejercicio 9: 
+--------------------------------------------------------
+
+DECLARE
+    CURSOR cliente_cursor IS
+        SELECT cliente_id, nombre_cliente
+        FROM clientes;
+    
+    v_cliente_id clientes.cliente_id%TYPE;
+    v_nombre_cliente clientes.nombre_cliente%TYPE;
+    v_pago_existente NUMBER;
+BEGIN
+    
+    OPEN cliente_cursor;
+    
+    LOOP
+        
+        FETCH cliente_cursor INTO v_cliente_id, v_nombre_cliente;
+        
+        
+        EXIT WHEN cliente_cursor%NOTFOUND;
+        
+        
+        SELECT COUNT(*) INTO v_pago_existente
+        FROM pagos
+        WHERE cliente_id = v_cliente_id;
+        
+        
+        IF v_pago_existente = 0 THEN
+            DBMS_OUTPUT.PUT_LINE('Cliente sin pagos: ' || v_nombre_cliente);
+        END IF;
+    END LOOP;
+    
+    
+    CLOSE cliente_cursor;
+END;
+/
+      
+--------------------------------------------------------
+--  Ejercicio 10: 
+--------------------------------------------------------
+
+DECLARE
+    -- Bucle FOR que recorre todos los clientes
+    CURSOR cliente_cursor IS
+        SELECT cliente_id, nombre_cliente
+        FROM clientes;
+    
+BEGIN
+    
+    FOR cliente_record IN cliente_cursor LOOP
+        
+        DECLARE
+            v_pago_existente NUMBER;
+        BEGIN
+
+            SELECT COUNT(*)
+            INTO v_pago_existente
+            FROM pagos
+            WHERE cliente_id = cliente_record.cliente_id;
+            
+            
+            IF v_pago_existente = 0 THEN
+                DBMS_OUTPUT.PUT_LINE('Cliente sin pagos: ' || cliente_record.nombre_cliente);
+            END IF;
+        END;
+    END LOOP;
+END;
+/
+      
+--------------------------------------------------------
+--  Ejercicio 11: 
+--------------------------------------------------------
+
+CREATE PROCEDURE ModificarPrecioVenta(IN precio_input DECIMAL(10, 2), IN id_producto INT)
+
+BEGIN 
+
+    --Comprobar si el precio actual del producto es nulo
+    DECLARE precio_actual DECIMAL (10, 2);
+
+    --Obtener el precio actual del producto
+
+    SELECT precio_venta INTO precio_actual
+        FROM productos WHERE id_producto = id_producto;
+
+    --Si el precio es nulo asignamos el nuevo precio    
+    IF precio_actual IS NULL THEN 
+        UPDATE PRODUCTOS SET precio_venta = precio_input WHERE id_producto = id_producto;
+    ELSE 
+    --Si el precio no es nulo sumamos el precio ingresado al precio actual
+    UPDATE precio_venta = precio_actual + precio_input
+        WHERE id_producto = id_producto;
+    END IF;
+        END $$
+
+DELIMITER;
