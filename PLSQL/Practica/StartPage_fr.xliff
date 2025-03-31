@@ -64,4 +64,25 @@ CREATE OR replace PROCEDURE comprobar_consistencia_pedidos IS
     v_filas_actualizadas_contiene NUMBER := 0;
     
 BEGIN
+    FOR r IN (SELECT p.codigo_perdido, SUM (c.precio_comision) AS total_comision
+        FROM pedidos p JOIN contiene c ON p.codigo_pedido = c.codigo_pedido
+            GROUP BYE p.codigo_pedido) LOOP
+            
+    /*Verificar el importe total*/
+    
+    v_codigo_pedido := r.codigo_pedido;
+    v_importe_calculado := r.total_comision;
+    
+    /*Obtener el importe almacenado en la tabla pedidos*/
+    
+    SELECT importe_total INTO v_importe_total FROM pedidos
+        WHERE codigo_pedido = v_codigo_pedido;
+        
+    /*Si el importe no coincide con el almacenamiento*/
+    
+    IF v_importe_calculado != v_importe_total THEN 
+        UPDATE pedidos SET importe_total = v_importe_calculado
+            WHERE codigo_pedido = v_codigo_pedido;
+                v_filas_actualizadas := v_filas_actualizadas + 1;
+    END IF;
     
