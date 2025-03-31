@@ -54,3 +54,14 @@ CREATE TABLE cupones(
     fecha_caducidad DATE NOT NULL,
     descuento NUMBER(5, 2) NOT NULL
 );
+
+
+CREATE OR replace PROCEDURE comprobar_consistencia_pedidos IS
+    v_codigo_pedido PEDIDOS.codigo_pedido%TYPE;
+    v_precio_comision CONTIENE.precio_comision%TYPE;
+    v_importe_calculado NUMBER;
+    v_filas_actualizadas NUMBER := 0;
+    v_filas_actualizadas_contiene NUMBER := 0;
+    
+BEGIN
+    
