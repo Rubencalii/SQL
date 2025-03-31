@@ -1,4 +1,3 @@
-
 CREATE TABLE restaurantes(
     codigo_restaurante NUMBER PRIMARY KEY,
     nombre VARCHAR2(100),
