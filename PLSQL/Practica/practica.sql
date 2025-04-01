@@ -85,3 +85,23 @@ BEGIN
                 v_filas_actualizadas := v_filas_actualizadas + 1;
     END IF;
     
+    /*Actualizar si es necesario*/
+
+    UPDATE CONTIENE SET precio_comision = v_precio_comision
+        WHERE codigo_pedido = r.codigo_pedido;
+        v_filas_actualizadas_contiene := v_filas_actualizadas_contiene + 1;
+    END LOOP;
+
+    IF v_filas_actualizadas = 0 AND v_filas_actualizadas_contiene = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Ningun cambio en los datos.');
+    ELSE 
+        DBMS_OUTPUT.PUT_LINE(('Filas modificadas en Pedidos'); || v_filas_actualizadas);
+        DBMS_OUTPUT.PUT_LINE(('Filas modificadas en Contiene.'); || v_filas_actualizadas_contiene);
+    END IF;
+
+    EXCEPTION 
+
+    WHEN OTHERS THEN 
+        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
+    END comprobar_consistencia_pedidos;
+    /
