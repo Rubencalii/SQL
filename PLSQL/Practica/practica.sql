@@ -1,107 +1,108 @@
-CREATE TABLE restaurantes(
-    codigo_restaurante NUMBER PRIMARY KEY,
-    nombre VARCHAR2(100),
-    direccion VARCHAR2(100),
-    horario LOB,
-    areas_cobertura VARCHAR2(100)
-);
-
-CREATE TABLE platos(
-    codigo_plato NUMBER PRIMARY KEY
-    nombre VARCHAR2(100),
-    descripcion VARCHAR2(100),
-    precio NUMBER(10, 2),
-    comision NUMBER(5, 2),
-    categoria VARCHAR2(100),
-    codigo_restaurante NUMBER,
-    
-    FOREIGN KEY (codigo_restaurante) REFERENCES Restaurantes(codigo_restaurante)
-);
-
 CREATE TABLE clientes (
-    dni VARCHAR2(20) PRIMARY KEY,
-    nombre VARCHAR2(100),
-    apellidos VARCHAR2(100),
-    direccion VARCHAR2(255),
-    telefono VARCHAR2(20),
-    usuario VARCHAR2(50),
-    contrasena VARCHAR2(50)
-);
-
-CREATE TABLE pedidos(
-    codigo_pedido NUMBER PRIMARY KEY,
-    dni_cliente VARCCHAR2(100),
-    fecha DATE NOT NULL,
-    fecha_entrega DATE,
-    estado VARCHAR(100) CHECK (estado IN('Resetear', 'Cancelar', 'Entregado', 'Rechazar', 'Ruta')),
-    importe_total NUMBER(10, 2),
-    codigo_cupon VARCHAR(10),
-    
-    CONSTRAINT fk_cliente FOREIGN KEY(dni_cliente) REFERENCES CLIENTE(dni)
-);
-
-CREATE TABLE contiene(
-    codigo_pedido NUMBER REFERENCES pedidos(codigo_pedido),
-    codigo_plato NUMBER REFERENCES platos(codigo_plato),
-    unidades NUMBER NOT NULL,
-    precio_comision NUMBER(10, 2)NOT NULL,
-    PRIMARY KEY (codigo_pedido, codigo_plato)
-);
-
-CREATE TABLE cupones(
-    codigo_cupon VARCHAR2(10) PRIMARY KEY,
-    fecha_caducidad DATE NOT NULL,
-    descuento NUMBER(5, 2) NOT NULL
+  dni VARCHAR2(20) PRIMARY KEY,
+  nombre VARCHAR2(100),
+  apellidos VARCHAR2(100),
+  direccion VARCHAR2(200),
+  telefono VARCHAR2(20)
 );
 
 
-CREATE OR replace PROCEDURE comprobar_consistencia_pedidos IS
-    v_codigo_pedido PEDIDOS.codigo_pedido%TYPE;
-    v_precio_comision CONTIENE.precio_comision%TYPE;
-    v_importe_calculado NUMBER;
-    v_filas_actualizadas NUMBER := 0;
-    v_filas_actualizadas_contiene NUMBER := 0;
-    
+CREATE TABLE restaurantes (
+  codigo_restaurante NUMBER PRIMARY KEY,
+  nombre VARCHAR2(100),
+  direccion VARCHAR2(200),
+  horario VARCHAR2(200),
+  areas_cobertura VARCHAR2(500)
+);
+
+CREATE TABLE platos (
+  codigo_plato NUMBER PRIMARY KEY,
+  nombre VARCHAR2(100),
+  descripcion VARCHAR2(500),
+  precio NUMBER,
+  comision NUMBER,
+  codigo_restaurante NUMBER,
+  FOREIGN KEY (codigo_restaurante) REFERENCES restaurantes(codigo_restaurante)
+);
+
+CREATE TABLE pedidos (
+  codigo_pedido NUMBER PRIMARY KEY,
+  dni_cliente VARCHAR2(20),
+  fecha_pedido DATE,
+  fecha_entrega DATE,
+  estado VARCHAR2(20),
+  importe_total NUMBER,
+  FOREIGN KEY (dni_cliente) REFERENCES clientes(dni)
+);
+
+CREATE TABLE contiene (
+  codigo_pedido NUMBER,
+  codigo_plato NUMBER,
+  precio_plato NUMBER,
+  precio_comision NUMBER,
+  cantidad NUMBER,
+  PRIMARY KEY (codigo_pedido, codigo_plato),
+  FOREIGN KEY (codigo_pedido) REFERENCES pedidos(codigo_pedido),
+  FOREIGN KEY (codigo_plato) REFERENCES platos(codigo_plato)
+);
+
+CREATE TABLE cupones_descuento (
+  codigo_cupon VARCHAR2(20) PRIMARY KEY,
+  fecha_caducidad DATE,
+  porcentaje_descuento NUMBER
+);
+
+CREATE OR REPLACE PROCEDURE obtener_datos_cliente(p_dni IN VARCHAR2) IS
+  v_nombre_cliente VARCHAR2(100);
+  v_apellidos_cliente VARCHAR2(100);
+  v_direccion_cliente VARCHAR2(200);
+  v_telefono_cliente VARCHAR2(20);
+  v_total_importe NUMBER := 0;
+  
+  CURSOR c_pedidos IS
+    SELECT p.codigo_pedido, p.fecha_pedido, p.fecha_entrega, p.estado, p.importe_total
+    FROM pedidos p
+    WHERE p.dni_cliente = p_dni
+    ORDER BY p.fecha_pedido;
+
+  v_codigo_pedido pedidos.codigo_pedido%TYPE;
+  v_fecha_pedido pedidos.fecha_pedido%TYPE;
+  v_fecha_entrega pedidos.fecha_entrega%TYPE;
+  v_estado pedidos.estado%TYPE;
+  v_importe_total pedidos.importe_total%TYPE;
+
 BEGIN
-    FOR r IN (SELECT p.codigo_perdido, SUM (c.precio_comision) AS total_comision
-        FROM pedidos p JOIN contiene c ON p.codigo_pedido = c.codigo_pedido
-            GROUP BYE p.codigo_pedido) LOOP
-            
-    /*Verificar el importe total*/
-    
-    v_codigo_pedido := r.codigo_pedido;
-    v_importe_calculado := r.total_comision;
-    
-    /*Obtener el importe almacenado en la tabla pedidos*/
-    
-    SELECT importe_total INTO v_importe_total FROM pedidos
-        WHERE codigo_pedido = v_codigo_pedido;
-        
-    /*Si el importe no coincide con el almacenamiento*/
-    
-    IF v_importe_calculado != v_importe_total THEN 
-        UPDATE pedidos SET importe_total = v_importe_calculado
-            WHERE codigo_pedido = v_codigo_pedido;
-                v_filas_actualizadas := v_filas_actualizadas + 1;
-    END IF;
-    
-    /*Actualizar si es necesario*/
+  /* Obtención de datos del cliente */
+  SELECT c.nombre, c.apellidos, c.direccion, c.telefono
+  INTO v_nombre_cliente, v_apellidos_cliente, v_direccion_cliente, v_telefono_cliente
+  FROM clientes c
+  WHERE c.dni = p_dni;
 
-    UPDATE CONTIENE SET precio_comision = v_precio_comision
-        WHERE codigo_pedido = r.codigo_pedido;
-        v_filas_actualizadas_contiene := v_filas_actualizadas_contiene + 1;
-    END LOOP;
+  /* Mostrar los datos del cliente*/
+  DBMS_OUTPUT.PUT_LINE('Datos del Cliente:');
+  DBMS_OUTPUT.PUT_LINE('Nombre: ' || v_nombre_cliente);
+  DBMS_OUTPUT.PUT_LINE('Apellidos: ' || v_apellidos_cliente);
+  DBMS_OUTPUT.PUT_LINE('Dirección: ' || v_direccion_cliente);
+  DBMS_OUTPUT.PUT_LINE('Teléfono: ' || v_telefono_cliente);
 
-    IF v_filas_actualizadas = 0 AND v_filas_actualizadas_contiene = 0 THEN
-        DBMS_OUTPUT.PUT_LINE('Ningun cambio en los datos.');
-    ELSE 
-        DBMS_OUTPUT.PUT_LINE(('Filas modificadas en Pedidos'); || v_filas_actualizadas);
-        DBMS_OUTPUT.PUT_LINE(('Filas modificadas en Contiene.'); || v_filas_actualizadas_contiene);
-    END IF;
+  /* Mostrar los pedidos del cliente */
+  DBMS_OUTPUT.PUT_LINE('Pedidos Realizados:');
+  FOR pedido IN c_pedidos LOOP
+    DBMS_OUTPUT.PUT_LINE('Código de Pedido: ' || pedido.codigo_pedido);
+    DBMS_OUTPUT.PUT_LINE('Fecha del Pedido: ' || pedido.fecha_pedido);
+    DBMS_OUTPUT.PUT_LINE('Fecha de Entrega: ' || pedido.fecha_entrega);
+    DBMS_OUTPUT.PUT_LINE('Estado: ' || pedido.estado);
+    DBMS_OUTPUT.PUT_LINE('Importe: ' || pedido.importe_total);
+    v_total_importe := v_total_importe + pedido.importe_total;
+  END LOOP;
 
-    EXCEPTION 
-
-    WHEN OTHERS THEN 
-        DBMS_OUTPUT.PUT_LINE('Error: ' || SQLERRM);
-    END comprobar_consistencia_pedidos;
-    /
+  /* Mostrar el total de los pedidos */
+  DBMS_OUTPUT.PUT_LINE('Total de los Pedidos: ' || v_total_importe);
+  
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Error: No se encontró cliente con el DNI ' || p_dni);
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Error inesperado: ' || SQLERRM);
+END obtener_datos_cliente;
+/
