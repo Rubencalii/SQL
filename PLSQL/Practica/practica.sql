@@ -6,7 +6,6 @@ CREATE TABLE clientes (
   telefono VARCHAR2(20)
 );
 
-
 CREATE TABLE restaurantes (
   codigo_restaurante NUMBER PRIMARY KEY,
   nombre VARCHAR2(100),
@@ -61,9 +60,7 @@ CREATE OR REPLACE PROCEDURE obtener_datos_cliente(p_dni IN VARCHAR2) IS
   
   CURSOR c_pedidos IS
     SELECT p.codigo_pedido, p.fecha_pedido, p.fecha_entrega, p.estado, p.importe_total
-    FROM pedidos p
-    WHERE p.dni_cliente = p_dni
-    ORDER BY p.fecha_pedido;
+        FROM pedidos p WHERE p.dni_cliente = p_dni ORDER BY p.fecha_pedido;
 
   v_codigo_pedido pedidos.codigo_pedido%TYPE;
   v_fecha_pedido pedidos.fecha_pedido%TYPE;
@@ -74,9 +71,8 @@ CREATE OR REPLACE PROCEDURE obtener_datos_cliente(p_dni IN VARCHAR2) IS
 BEGIN
   /* Obtención de datos del cliente */
   SELECT c.nombre, c.apellidos, c.direccion, c.telefono
-  INTO v_nombre_cliente, v_apellidos_cliente, v_direccion_cliente, v_telefono_cliente
-  FROM clientes c
-  WHERE c.dni = p_dni;
+    INTO v_nombre_cliente, v_apellidos_cliente, v_direccion_cliente, v_telefono_cliente
+        FROM clientes c WHERE c.dni = p_dni;
 
   /* Mostrar los datos del cliente*/
   DBMS_OUTPUT.PUT_LINE('Datos del Cliente:');
