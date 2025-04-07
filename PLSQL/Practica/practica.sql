@@ -20,8 +20,8 @@ CREATE OR REPLACE PROCEDURE mostrar_datos_cliente IS
 BEGIN
     -- Solicitar el DNI del cliente
     DBMS_OUTPUT.PUT_LINE('Ingrese el DNI del cliente:');
-    -- Aquí se puede utilizar alguna forma de capturar el DNI, por ejemplo, a través de una variable de entrada
-    v_dni_cliente := '12345678A';  
+    -- Aquí se puede utilizar alguna forma de capturar el DNI
+        v_dni_cliente := '12345678A';  
 
     -- Obtener los datos del cliente
     SELECT c.nombre, c.apellidos, c.direccion, c.telefono
@@ -82,8 +82,7 @@ BEGIN
 
         -- Verificar y actualizar el precio con comisión en la tabla Contiene
         FOR plato IN (SELECT c.precio + c.comision AS precio_con_comision
-                      FROM Contiene c
-                      WHERE c.codigo_pedido = pedido.codigo_pedido) LOOP
+                      FROM Contiene WHERE c.codigo_pedido = pedido.codigo_pedido) LOOP
             -- Actualizar precio con comisión
             UPDATE Contiene
             SET precio_con_comision = plato.precio_con_comision
