@@ -66,3 +66,94 @@ INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (2, 101, 10, DATE '2024
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (3, 103, 20, DATE '2024-03-13');
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 105, 30, DATE '2024-03-14');
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (5, 101, 40, DATE '2024-03-15');
+
+--Ejercicio 1
+
+DECLARE 
+    CURSOR cur_tratamiento IS SELECT tratamiento, COUNT(id_tra) AS num_veces FROM Citas
+        GROUP BY tratamiento;
+
+    v_tratamiento citas.tratamiento%TYPE;
+    v_num_veces NUMBER;
+
+BEGIN 
+
+    OPEN cur_tratamiento;
+    LOOP 
+
+        FETCH cur_tratamiento INTO v_tratamiento, v_num_veces;
+        EXIT WHEN cur_tratamiento%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('El tratamiento '||v_tratamiento|| ' se ha hecho '|| v_num_veces );
+
+    END LOOP;
+    CLOSE cur_tratamiento;
+END;
+
+--Ejercicio 2
+
+DECLARE
+    
+    CURSOR cur_citas IS SELECT cita FROM citas WHERE id_cli = p_cliente_id;
+    
+    v_fecha_cita cita.fecha%TYPE;
+    v_total_citas NUMBER := 0;
+
+BEGIN 
+
+    --Solicitar al usuario el ID del cliente
+    v_cliente_idid_cli := &Introduzca_ID_Cliente;
+    DBMS_OUTPUT.PUT_LINE('Citas del cliente: '|| v_cliente_id);
+
+    --Abrir y recorrer el cursor
+    OPEN cur_citas(v_cliente_id);
+    LOOP 
+        FETCH cur_citas INTO v_fecha_cita;
+        EXIT WHEN cur_citas%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE('- '|| v_fecha_cita);
+        v_total_citas := v_total_citas + 1 ;
+    END LOOP;
+    CLOSE cur_citas;
+        DBMS_OUTPUT.PUT_LINE('Tiene un total de: '|| v_total_citas || ' de citas.');
+END;
+
+--Ejercicio 3
+
+DECLARE
+
+    CURSOR cur_cliente IS
+        SELECT id_cli, nombre 
+        FROM cita;
+    v_cliente cur_cliente%ROWTYPE;
+
+    CURSOR citas_cursor (p_idCliente NUMBER) IS
+        SELECT fecha
+        FROM cita
+        WHERE id_cli = p_idCliente;
+    v_fechaCita cita.fechaCita%TYPE;
+    v_contador_citas NUMBER;
+
+BEGIN
+
+    OPEN cur_cliente;
+    LOOP
+        FETCH cur_cliente INTO v_cliente;
+        EXIT WHEN cur_cliente%NOTFOUND;
+
+        DBMS_OUTPUT.PUT_LINE('Citas de: ' || v_cliente.nombre); 
+        v_contador_citas := 0;
+        OPEN citas_cursor(v_cliente.id_cli);
+        LOOP
+        FETCH citas_cursor INTO v_fechaCita;
+        EXIT WHEN citas_cursor%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE('- ' || v_fechaCita);
+        v_contador_citas := v_contador_citas + 1;
+        END LOOP;
+        CLOSE citas_cursor;
+        DBMS_OUTPUT.PUT_LINE('Tiene un total de ' || v_contador_citas || ' citas.');
+        DBMS_OUTPUT.PUT_LINE(''); 
+        
+    END LOOP;
+    CLOSE cur_cliente;
+END;
+/
