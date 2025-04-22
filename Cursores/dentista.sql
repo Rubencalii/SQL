@@ -68,25 +68,24 @@ INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 105, 30, DATE '2024
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (5, 101, 40, DATE '2024-03-15');
 
 --Ejercicio 1
+DECLARE
 
-DECLARE 
-    CURSOR cur_tratamiento IS SELECT tratamiento, COUNT(id_tra) AS num_veces FROM Citas
-        GROUP BY tratamiento;
+    CURSOR cur_trab IS SELECT nombre, sueldo + (COUNT (id_tra)*4) FROM trabajador
+                            LEFT JOIN cita ON id_tra=id GROUP BY nombre, sueldo;
+    nom trabajador.nombre%TYPE;
+    total NUMBER(7,2);
 
-    v_tratamiento citas.tratamiento%TYPE;
-    v_num_veces NUMBER;
-
-BEGIN 
-
-    OPEN cur_tratamiento;
-    LOOP 
-
-        FETCH cur_tratamiento INTO v_tratamiento, v_num_veces;
-        EXIT WHEN cur_tratamiento%NOTFOUND;
-        DBMS_OUTPUT.PUT_LINE('El tratamiento '||v_tratamiento|| ' se ha hecho '|| v_num_veces );
-
+BEGIN
+    OPEN cur_trab;
+    
+    LOOP
+        FETCH cur_trab INTO nom, total;
+        EXIT WHEN cur_trab%NOTFOUND;
+        
+        DBMS_OUTPUT.put_line('El trabajador '||nom||' tiene sueldo '||total);
     END LOOP;
-    CLOSE cur_tratamiento;
+    CLOSE cur_trab;
+
 END;
 
 --Ejercicio 2
