@@ -55,6 +55,7 @@ CREATE TABLE LISTADO_EMPLEADOS(
     puesto_trabajo VARCHAR(255)
 );
 
+--Cursor
 CREATE OR REPLACE PROCEDURE listar_empleados_jefe(p_jefe_id NUMBER) IS
     
     CURSOR cursor_empleados IS SELECT nombre, sueldo, puesto_trabajo
