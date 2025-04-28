@@ -46,3 +46,39 @@ END;
 /
 
 --Ejercicio 3
+
+--Crear la tabla
+
+CREATE TABLE LISTADO_EMPLEADOS(
+    nombre  VARCHAR(255),
+    sueldo  NUMBER, 
+    puesto_trabajo VARCHAR(255)
+);
+
+CREATE OR REPLACE PROCEDURE listar_empleados_jefe(p_jefe_id NUMBER) IS
+    
+    CURSOR cursor_empleados IS SELECT nombre, sueldo, puesto_trabajo
+        FROM empleados WHERE jefe_id = p_jefe_id;
+
+    v_nombre empleados.sueldo&TYPE;
+    v_sueldo empleados.sueldo&TYPE;
+    v_puesto_trabajo empleados.puesto_trabajo&TYPE;
+
+BEGIN
+    --Limpiar la tabla
+    DELETE FROM LISTADO_EMPLEADOS;
+
+    OPEN cursor_empleados;
+    LOOP
+        FETCH cursor_empleados INTO v_nombre, v_sueldo, v_puesto_trabajo;
+        EXIT WHEN cursor_empleados%NOTFOUND;
+
+        --Insertar los empleados
+        INSERT INTO LISTADO_EMPLEADOS(nombre, sueldo, puesto_trabajo)
+        VALUES (v_nombre, v_sueldo, v_puesto_trabajo);
+    END LOOP;
+    CLOSE cursor_empleados;
+END;
+/
+
+--Ejercicio 4
