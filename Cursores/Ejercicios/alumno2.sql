@@ -1,3 +1,4 @@
+--Ejercicio 1
 DECLARE OR REPLACE PROCEDURE actualizar_compra_stock IS
     
     CURSOR cur_productos IS SELECT producto_id, SUM(cantidad) AS total_cantidad
@@ -21,7 +22,7 @@ BEGIN
 END;
 /
 
--Ejercicio 2
+--Ejercicio 2
 
 DECLARE REPLACE PROCEDURE actualizar_compra_stock IS
     /* Declarar un cursor para recorrer los productos de comprastocks*/
@@ -43,3 +44,5 @@ BEGIN
     CLOSE cursor_compra_stocks;
 END;
 /
+
+--Ejercicio 3
