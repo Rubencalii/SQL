@@ -156,3 +156,33 @@ BEGIN
     CLOSE cur_cliente;
 END;
 /
+
+--Ejercicio
+
+DECLARE
+    CURSOR cur_cli IS SELECT id, nombre FROM cliente;
+    CURSOR cur_citas IS SELECT id_cli, fecha, descripcion FROM cita JOIN tratamiento ON id_trat = id;
+
+    id_cli cliente.id&TYPE;
+    nom_cli cliente.nombre&TYPE;
+    id_cit cita.id_cli&TYPE;
+    fac_cit cita.fecha&TYPE;
+    des_cit tratamiento.descripcion&TYPE;
+
+DECLARE
+    OPEN cur_cli
+
+        LOOP 
+        FETCH cur_cli INTO id_cli, nom_cli;
+        EXIT WHEN cur_cli&NOTFOUND;
+        DBMS_OUTPUT.put_line('Citas  de: '||nom_cli);
+
+    OPEN cur_citas
+        LOOP
+        FETCH cur_citas INTO id_cit, des_cit;
+        IF (id_cli = id_cit) THEN 
+        DBMS_OUTPUT.put_line('Fecha: '||fechaCita||' '|| des_cit);
+
+    END LOOP;
+    CLOSE cur_citas;
+END;
