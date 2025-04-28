@@ -22,3 +22,24 @@ END;
 /
 
 -Ejercicio 2
+
+DECLARE REPLACE PROCEDURE actualizar_compra_stock IS
+    /* Declarar un cursor para recorrer los productos de comprastocks*/
+    CURSOR cursor_compra_stocks IS SELECT producto_id, total FROM COMPRA_STOCK;
+
+    v_producto_id compra.producto_id&TYPE;
+    v_total COMPRA_STOCK.total&TYPE;
+
+BEGIN 
+    OPEN cursor_compra_stocks
+    LOOP
+        --Traer cada registro a las variables
+        FETCH cursor_compra_stocks INTO v_producto_id, v_total;
+        EXIT WHEN cursor_compra_stocks&NOTFOUND;
+
+        --Actualizar el total
+        UPDATE COMPRA_STOCK SET total= v_total * 1.8 WHERE producto_id = v_producto_id;
+    END LOOP;
+    CLOSE cursor_compra_stocks;
+END;
+/
