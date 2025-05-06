@@ -113,3 +113,6 @@ BEGIN
     END LOOP;
     CLOSE c_fechas;
 END;
+
+/*Ejercicio 2:*/
+
