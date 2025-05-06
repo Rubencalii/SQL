@@ -36,12 +36,12 @@ CREATE TABLE cita(
 
 INSERT INTO cliente VALUES (1, 'Ana', 'Morales');
 INSERT INTO cliente VALUES (2, 'Pilar', 'Jimenez');
-INSERT INTO cliente VALUES (3, 'Juan', 'Pérez');
-INSERT INTO cliente VALUES (4, 'Luis', 'López');
-INSERT INTO cliente VALUES (5, 'Manu', 'García');
+INSERT INTO cliente VALUES (3, 'Juan', 'Pï¿½rez');
+INSERT INTO cliente VALUES (4, 'Luis', 'Lï¿½pez');
+INSERT INTO cliente VALUES (5, 'Manu', 'Garcï¿½a');
 
 INSERT INTO trabajador VALUES (1, 'Paloma', 'Cuesta');
-INSERT INTO trabajador VALUES (2, 'Belén', 'López');
+INSERT INTO trabajador VALUES (2, 'Belï¿½n', 'Lï¿½pez');
 INSERT INTO trabajador VALUES (3, 'Emilio', 'Delgado');
 
 INSERT INTO tratamiento VALUES (1, 'Corte', 15);
@@ -66,3 +66,50 @@ INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (2, 2, 5, '27-03-2024')
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (3, 3, 2, '30-03-2024');
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 2, 1, '17-03-2024');
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 3, 3, '13-03-2024');
+
+/*Ejercicio 1: */
+
+DECLARE
+    CURSOR c_fechas IS
+        SELECT DISTINCT fecha FROM cita ORDER BY fecha;
+
+    v_fecha DATE;
+
+    CURSOR c_citas(p_fecha DATE) IS
+        SELECT cli.nombre, tra.nombre, trat.nombre, NVL(c.duracion, 0), trat.precio
+        FROM cita c
+        JOIN cliente cli ON c.id_cli = cli.id
+        JOIN trabajador tra ON c.id_tra = tra.id
+        JOIN tratamiento trat ON c.id_trat = trat.id
+        WHERE c.fecha = p_fecha;
+
+    v_nom_cli VARCHAR2(20);
+    v_nom_tra VARCHAR2(20);
+    v_trat VARCHAR2(20);
+    v_duracion NUMBER;
+    v_precio NUMBER(5,2);
+
+BEGIN
+    OPEN c_fechas;
+    FETCH c_fechas INTO v_fecha;
+
+    WHILE c_fechas%FOUND LOOP
+        DBMS_OUTPUT.PUT_LINE('Mostrando las citas del ' || TO_CHAR(v_fecha, 'DD/MM/YY'));
+
+        OPEN c_citas(v_fecha);
+        FETCH c_citas INTO v_nom_cli, v_nom_tra, v_trat, v_duracion, v_precio;
+
+        WHILE c_citas%FOUND LOOP
+            DBMS_OUTPUT.PUT_LINE('Cliente: ' || v_nom_cli ||
+                                 ' Trabajador: ' || v_nom_tra ||
+                                 ' Tratamiento: ' || v_trat ||
+                                 ' Duracion: ' || v_duracion ||
+                                 ' Precio: ' || TO_CHAR(v_precio, 'FM9990.00') || 'â‚¬');
+            FETCH c_citas INTO v_nom_cli, v_nom_tra, v_trat, v_duracion, v_precio;
+        END LOOP;
+
+        CLOSE c_citas;
+        FETCH c_fechas INTO v_fecha;
+    END LOOP;
+    CLOSE c_fechas;
+END;
