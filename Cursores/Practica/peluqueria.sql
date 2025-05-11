@@ -67,7 +67,7 @@ INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (3, 3, 2, '30-03-2024')
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 2, 1, '17-03-2024');
 INSERT INTO cita (id_cli, id_tra, id_trat, fecha) VALUES (4, 3, 3, '13-03-2024');
 
-/*Ejercicio 1: */
+-- Ejercicio 1: 
 
 DECLARE
     CURSOR c_fechas IS
@@ -114,5 +114,102 @@ BEGIN
     CLOSE c_fechas;
 END;
 
-/*Ejercicio 2:*/
+-- EJERCICIO 2:
+DECLARE
+    v_nombre_cliente VARCHAR2(50) := 'NombreCliente';
+    v_apellidos_cliente VARCHAR2(50) := 'ApellidoCliente';
+    v_precio_total NUMBER := 0;
+BEGIN
+    FOR r IN (
+        SELECT t.descripcion, t.precio
+        FROM clientes c
+        JOIN citas ci ON c.id_cliente = ci.id_cliente
+        JOIN tratamientos t ON ci.id_tratamiento = t.id_tratamiento
+        WHERE c.nombre = v_nombre_cliente AND c.apellidos = v_apellidos_cliente
+    ) LOOP
+        DBMS_OUTPUT.PUT_LINE('Tratamiento: ' || r.descripcion || ' - Precio: ' || r.precio);
+        v_precio_total := v_precio_total + r.precio;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Total a pagar: ' || v_precio_total);
+END;
+/
+
+-- EJERCICIO 3:
+DECLARE
+    v_nombre_cliente VARCHAR2(50) := 'NombreCliente';
+    v_apellidos_cliente VARCHAR2(50) := 'ApellidoCliente';
+    v_nombre_trabajador VARCHAR2(50) := 'NombreTrabajador';
+    v_descripcion_tratamiento VARCHAR2(100) := 'DescripcionTratamiento';
+    v_fecha DATE := TO_DATE('2025-05-20', 'YYYY-MM-DD');
+    v_id_cliente NUMBER;
+    v_id_trabajador NUMBER;
+    v_id_tratamiento NUMBER;
+BEGIN
+    SELECT id_cliente INTO v_id_cliente FROM clientes WHERE nombre = v_nombre_cliente AND apellidos = v_apellidos_cliente;
+    SELECT id_trabajador INTO v_id_trabajador FROM trabajadores WHERE nombre = v_nombre_trabajador;
+    SELECT id_tratamiento INTO v_id_tratamiento FROM tratamientos WHERE descripcion = v_descripcion_tratamiento;
+
+    INSERT INTO citas (id_cliente, id_trabajador, id_tratamiento, fecha, duracion)
+    VALUES (v_id_cliente, v_id_trabajador, v_id_tratamiento, v_fecha, NULL);
+END;
+/
+
+-- EJERCICIO 4:
+DECLARE
+    v_nombre_cliente VARCHAR2(50) := 'NombreCliente';
+    v_apellidos_cliente VARCHAR2(50) := 'ApellidoCliente';
+    v_nombre_trabajador VARCHAR2(50) := 'NombreTrabajador';
+    v_tratamiento VARCHAR2(100) := 'DescripcionTratamiento';
+    v_fecha DATE := TO_DATE('2025-05-20', 'YYYY-MM-DD');
+    v_duracion NUMBER := 60;
+    v_id_cliente NUMBER;
+    v_id_trabajador NUMBER;
+    v_id_tratamiento NUMBER;
+    v_existencia NUMBER := 0;
+    v_duracion_actual NUMBER;
+BEGIN
+    SELECT id_cliente INTO v_id_cliente FROM clientes WHERE nombre = v_nombre_cliente AND apellidos = v_apellidos_cliente;
+    SELECT id_trabajador INTO v_id_trabajador FROM trabajadores WHERE nombre = v_nombre_trabajador;
+    SELECT id_tratamiento INTO v_id_tratamiento FROM tratamientos WHERE descripcion = v_tratamiento;
+
+    SELECT COUNT(*) INTO v_existencia
+    FROM citas
+    WHERE id_cliente = v_id_cliente AND id_trabajador = v_id_trabajador AND id_tratamiento = v_id_tratamiento AND fecha = v_fecha;
+
+    IF v_existencia = 0 THEN
+        INSERT INTO citas (id_cliente, id_trabajador, id_tratamiento, fecha, duracion)
+        VALUES (v_id_cliente, v_id_trabajador, v_id_tratamiento, v_fecha, v_duracion);
+    ELSE
+        SELECT duracion INTO v_duracion_actual
+        FROM citas
+        WHERE id_cliente = v_id_cliente AND id_trabajador = v_id_trabajador AND id_tratamiento = v_id_tratamiento AND fecha = v_fecha;
+
+        IF v_duracion_actual IS NOT NULL THEN
+            DBMS_OUTPUT.PUT_LINE('La cita ya tiene duración.');
+        ELSE
+            UPDATE citas
+            SET duracion = v_duracion
+            WHERE id_cliente = v_id_cliente AND id_trabajador = v_id_trabajador AND id_tratamiento = v_id_tratamiento AND fecha = v_fecha;
+        END IF;
+    END IF;
+END;
+/
+
+-- EJERCICIO 5:
+DECLARE
+    v_total_global NUMBER := 0;
+BEGIN
+    FOR r IN (
+        SELECT t.descripcion, SUM(t.precio) AS total
+        FROM citas c
+        JOIN tratamientos t ON c.id_tratamiento = t.id_tratamiento
+        GROUP BY t.descripcion
+    ) LOOP
+        DBMS_OUTPUT.PUT_LINE('Tratamiento: ' || r.descripcion || ' - Total: ' || r.total);
+        v_total_global := v_total_global + r.total;
+    END LOOP;
+    DBMS_OUTPUT.PUT_LINE('Total global: ' || v_total_global);
+END;
+/
+
 
