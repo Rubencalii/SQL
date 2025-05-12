@@ -61,3 +61,30 @@ CREATE TRIGGER trigger_cambio_nombre_mascota
 BEFORE UPDATE ON mascota
 FOR EACH ROW
 EXECUTE FUNCTION aviso_cambio_nombre_mascota();
+
+--Ejercicio 4
+
+CREATE OR REPLACE FUNCTION  aviso_cambio_peso()
+RETURNS triggers AS $$
+DECLARE diferencia NUMBER;
+BEGIN
+    IF OLD.peso <> NEW.peso THEN 
+        diferencia := NEW.peso - OLD.peso;
+
+        IF diferencia  > 0 THEN 
+            RAISE NOTICE 'El animal ha ganado %.2f kg.', diferencia;
+        ELSE
+            RAISE NOTICE 'El animal ha perdido %.2f kg.', ABS(diferencia);
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_cambio_peso
+BEFORE UPDATE ON animal
+FOR EACH ROW
+EXECUTE FUNCTION aviso_cambio_peso();
+
+-- Ejercicio 5
