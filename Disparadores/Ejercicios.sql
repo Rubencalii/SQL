@@ -104,5 +104,22 @@ AFTER INSERT ON ingreso
 FOR EACH ROW
 EXECUTE FUNCTION aviso_sin_tratamiento();
 
---Ejercicio 6
+-- Ejercicio 6
+
+CREATE OR REPLACE FUNCTION crear_ingreso_por_nacimiento()
+RETURNS trigger AS $$
+BEGIN
+    INSERT INTO ingresos (id_mascota, fecha_ingreso, diagnostico)
+    VALUES (NEW.id_mascota, NEW.fecha_nacimiento, 'Nacimiento');
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_ingreso_por_nacimiento
+AFTER INSERT ON mascota
+FOR EACH ROW
+EXECUTE FUNCTION crear_ingreso_por_nacimiento();
+
+-- Ejercicio 7 
 
