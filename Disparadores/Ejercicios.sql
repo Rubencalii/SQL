@@ -88,3 +88,21 @@ FOR EACH ROW
 EXECUTE FUNCTION aviso_cambio_peso();
 
 -- Ejercicio 5
+
+CREATE OR REPLACE FUNCTION aviso_sin_tratamiento()
+RETURNS trigger AS $$
+BEGIN
+    IF NEW.id_tratamiento IS NULL THEN
+        RAISE NOTICE 'Aviso: El ingreso no tiene tratamiento asignado.';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_ingreso_sin_tratamiento
+AFTER INSERT ON ingreso
+FOR EACH ROW
+EXECUTE FUNCTION aviso_sin_tratamiento();
+
+--Ejercicio 6
+
