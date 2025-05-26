@@ -149,3 +149,94 @@ BEGIN
             ', Tel: ' || v_telefono_proveedor);
     END IF;
 END;
+
+/* Ejercico 3*/
+/* Crear un procedimiento almacenado que reciba el nombre de un cliente y muestre 
+por  pantalla  una  factura  con  los  pedidos  que  aún  no  ha  pagado.  Se  le  mostrará  el 
+precio total de cada compra. Los resultados deben mostrarse ordenados por fecha 
+de compra.*/
+
+CREATE OR REPLACE PROCEDURE mostrar_factura_cliente(p_nombre_cliente IN VARCHAR2) IS
+    CURSOR c_factura IS
+        SELECT 
+            C.FECHA,P.NOMBRE AS NOMBRE_PRODUCTO,C.CANTIDAD,PR.PRECIO,(C.CANTIDAD * PR.PRECIO) AS TOTAL
+        FROM CLIENTES CL
+        JOIN COMPRAS C ON CL.CODIGO = C.COD_CLIENTE
+        JOIN PRODUCTOS PR ON C.COD_PRODUCTO = PR.CODIGO
+        JOIN PRODUCTOS P ON PR.CODIGO = P.CODIGO
+        WHERE CL.NOMBRE = p_nombre_cliente
+          AND C.PAGADO = 'NO'
+        ORDER BY C.FECHA;
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('FACTURA PARA: ' || p_nombre_cliente);
+    DBMS_OUTPUT.PUT_LINE('FECHA      | PRODUCTO   | CANT | PRECIO | TOTAL');
+
+    FOR r IN c_factura LOOP
+        DBMS_OUTPUT.PUT_LINE(
+            TO_CHAR(r.FECHA, 'DD/MM/YYYY') || ' | ' ||
+            RPAD(r.NOMBRE_PRODUCTO, 10) || ' | ' ||
+            LPAD(r.CANTIDAD, 4) || ' | ' ||
+            LPAD(TO_CHAR(r.PRECIO, '999.99'), 6) || ' | ' ||
+            LPAD(TO_CHAR(r.TOTAL, '9999.99'), 7)
+        );
+    END LOOP;
+END;
+
+/* Ejercicio 4*/
+/* Crear  un  procedimiento  almacenado  que  reciba  una  fecha  y  muestre  las  compras 
+que  se  hicieron  en  esa  fecha.  El  procedimiento  mostrará  las  compras  agrupadas 
+por  clientes.  De  esta  forma  para  cada  cliente  mostrará  todas  las  compras  con  el 
+precio total de dicha compra y al final el dinero que el cliente debe, es decir sólo de 
+las compras que no haya pagado.*/
+
+CREATE OR REPLACE PROCEDURE mostrar_compras_por_fecha(p_fecha IN DATE) IS
+    CURSOR c_clientes IS
+        SELECT DISTINCT CL.CODIGO, CL.NOMBRE
+        FROM CLIENTES CL
+        JOIN COMPRAS C ON CL.CODIGO = C.COD_CLIENTE
+        WHERE C.FECHA = p_fecha;
+
+    CURSOR c_compras(p_cod_cliente NUMBER) IS
+        SELECT 
+            P.NOMBRE AS PRODUCTO,
+            C.CANTIDAD,
+            PR.PRECIO,
+            (C.CANTIDAD * PR.PRECIO) AS TOTAL,
+            C.PAGADO
+        FROM COMPRAS C
+        JOIN PRODUCTOS PR ON C.COD_PRODUCTO = PR.CODIGO
+        JOIN PRODUCTOS P ON PR.CODIGO = P.CODIGO
+        WHERE C.COD_CLIENTE = p_cod_cliente
+          AND C.FECHA = p_fecha;
+
+    v_total_deuda NUMBER := 0;
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('COMPRAS REALIZADAS EL: ' || TO_CHAR(p_fecha, 'DD/MM/YYYY'));
+    DBMS_OUTPUT.PUT_LINE('========================================================');
+
+    FOR cli IN c_clientes LOOP
+        DBMS_OUTPUT.PUT_LINE('CLIENTE: ' || cli.NOMBRE);
+        DBMS_OUTPUT.PUT_LINE('PRODUCTO  | CANT | PRECIO | TOTAL | PAGADO');
+
+        v_total_deuda := 0;
+
+        FOR compra IN c_compras(cli.CODIGO) LOOP
+            DBMS_OUTPUT.PUT_LINE(
+                RPAD(compra.PRODUCTO, 10) || ' | ' ||
+                LPAD(compra.CANTIDAD, 4) || ' | ' ||
+                LPAD(TO_CHAR(compra.PRECIO, '999.99'), 6) || ' | ' ||
+                LPAD(TO_CHAR(compra.TOTAL, '9999.99'), 7) || ' | ' ||
+                RPAD(compra.PAGADO, 6)
+            );
+
+            IF compra.PAGADO = 'NO' THEN
+                v_total_deuda := v_total_deuda + compra.TOTAL;
+            END IF;
+        END LOOP;
+
+        DBMS_OUTPUT.PUT_LINE('>>> TOTAL ADEUDADO POR EL CLIENTE: ' || TO_CHAR(v_total_deuda, '9999.99'));
+        DBMS_OUTPUT.PUT_LINE(CHR(10));
+    END LOOP;
+END;
